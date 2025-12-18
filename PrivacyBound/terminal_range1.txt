@@ -1,0 +1,2 @@
+Minimum difference (empirical - theoretical):  -0.000213798025921585
+Maximum difference (empirical - theoretical):  1.61852992341949e-7

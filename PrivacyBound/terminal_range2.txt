@@ -1,0 +1,38 @@
+
+Untight value at ( 5.8 , 0.65 , 0.71 ):  4.769176958603232 + [1, 4.770426939536975] diff: -0.00124998093374273 
+  message: Optimization terminated successfully.
+ success: True
+     fun: -4.769176958603232
+       x: [ 2.790e-01  7.100e-01  6.500e-01]
+     nit: 47
+    nfev: 2172
+     jac: [-2.665e-07 -2.335e-01  3.970e-01]
+
+Untight value at ( 8.5 , 0.55 , 0.67 ):  7.746907785152322 + [0, 7.747914606682075] diff: -0.00100682152975295 
+  message: Optimization terminated successfully.
+ success: True
+     fun: -7.746907785152322
+       x: [ 2.378e-01  1.000e+00  6.700e-01]
+     nit: 44
+    nfev: 2037
+     jac: [ 5.862e-05 -1.447e-02 -3.909e-01]
+
+Untight value at ( 9.6 , 0.59 , 0.68 ):  8.734336211564159 + [0, 8.736057955855758] diff: -0.00172174429159888 
+  message: Optimization terminated successfully.
+ success: True
+     fun: -8.734336211564159
+       x: [ 1.360e-01  1.000e+00  6.800e-01]
+     nit: 37
+    nfev: 1726
+     jac: [ 0.000e+00 -1.380e-02 -2.258e-01]
+
+Untight value at ( 9.8 , 0.65 , 0.7 ):  8.75951839875604 + [0, 8.761010100072275] diff: -0.00149170131623499 
+  message: Optimization terminated successfully.
+ success: True
+     fun: -8.75951839875604
+       x: [ 0.000e+00  1.000e+00  6.973e-01]
+     nit: 35
+    nfev: 1628
+     jac: [ 7.772e-03 -9.622e-03  0.000e+00]
+Minimum difference (empirical - theoretical):  -0.00172174429159888
+Maximum difference (empirical - theoretical):  1.55378785393623e-7
