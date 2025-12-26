@@ -31,6 +31,7 @@ The databases used for each experiment are included in their respective folder. 
 ### "Adult" database
 
 The Adult database was derived from the US Census Bureau’s 1994–1995 Current Population Survey (CPS) can be downloaded from 
+
 [1] B. Becker and R. Kohavi, “Adult”. UCI Machine Learning Repository, 1996. doi: 10.24432/C5XW20.
 
 ### "Census" database
@@ -59,3 +60,20 @@ We use directly postprocessing into numerical variables used in Rodríguez-Hoyos
 [4] A. Rodríguez-Hoyos, J. Estrada-Jiménez, D. Rebollo-Monedero, J. Parra-Arnau, and J. Forné, 
 “Does $k$-Anonymous Microaggregation Affect Machine-Learned Macrotrends?”, 
 IEEE Access, vol. 6, pp. 28258–28277, 2018, doi: 10.1109/ACCESS.2018.2834858.
+
+## License
+
+Copyright (C) 2025 Àlex Miranda-Pascual, Javier Parra-Arnau, and Thorsten Strufe
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see https://www.gnu.org/licenses/.
