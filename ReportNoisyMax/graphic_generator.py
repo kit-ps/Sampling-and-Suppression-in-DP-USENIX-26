@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+plt.rcParams['pdf.fonttype'] = 42  #Embed TTF fonts as Type 42
+plt.rcParams['ps.fonttype'] = 42
 from scipy import stats
 import warnings
 warnings.filterwarnings("ignore", message="invalid value")
@@ -66,7 +68,7 @@ def theoretical_eps_all(eps,m,M):
 
 
 
-### Plot of suppression
+### Plot of outlier-score suppression
 def generate_plot_suppression(plot_path_start, csv_path, plot_values, epsilon, list_m_and_M, file_name_m_and_M, plots_limits, include_title=True):
     ## Select points to plot
     df_all = pd.read_csv(csv_path)
@@ -182,7 +184,7 @@ def Wilson_CI(emp_prob,numberofrepeat):
     return [(term1 - term2)/term3, (term1 + term2)/term3]
 
 ### Plot of uniform Poisson sampling
-def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M, csv_path_list_MoSChange, epsilon_list, plot_type, noise_name, numberofrepeat, include_p1=True, include_title=True):
+def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M, csv_path_list_MoSChange, epsilon_list, plot_type, noise_name, numberofrepeat, include_title=True):
     fig, ax = plt.subplots()
 
     #colors = iter(mpl.colors.TABLEAU_COLORS.values())
@@ -206,13 +208,6 @@ def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M, csv
         df_MoSChange_plot.dropna(inplace=True)
         if df_M_plot.shape[0]==0:
             continue
-
-        ##If include_p1 selected, include the plot for the sampling rate p=1 (m=0). 
-        ##We select in this case the value of df_M_plot for m=0.01 (for both df)
-        #if include_p1==True:
-        #    value_p1 = df_M_plot["correct_empirical_probability_"+noise_name].iloc[0]
-        #    df_M_plot = pd.concat([pd.DataFrame([[0,value_p1]], columns=df_M_plot.columns), df_M_plot], ignore_index=True).sort_values(by=["m"])
-        #    df_MoSChange_plot = pd.concat([pd.DataFrame([[0,value_p1]], columns=df_MoSChange_plot.columns), df_MoSChange_plot], ignore_index=True).sort_values(by=["m"])
 
         if noise_name=="laplace":
             mechanism_name = "RNM with Laplace noise"

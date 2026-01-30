@@ -6,17 +6,6 @@ from generate_average_distance_list import *
 from kmedian import *
 os.environ['TF_XLA_FLAGS']= '--tf_xla_enable_xla_devices'
 
-"""From a list of values, generate the list of pairs (m,M) such that m and M are elements of the list and m<=M"""
-def generate_triangular_list_m_M(list_input: list=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])-> list:
-    m_and_M=[]
-
-    for m in list_input:
-        for M in list_input:
-            if m<=M:
-                m_and_M.append([m,M])
-
-    return m_and_M
-
 """Given a dataset, it returns a suppressed dataset with the records suppressed 
 according to the outlier scores in the probabilities file"""
 def suppressed_dataset(probabilities, dataset):

@@ -3,7 +3,6 @@ from sage.all import *
 import pandas as pd
 
 sens = 9E-6 #Rounding sensitivity 
-error = 1E-4 #Maximum allowed error for alert message
 
 N_max = 1E9 #Maximum N checked
 
@@ -26,6 +25,7 @@ def iteration_inverse(eps):
         for M100 in [M for M in range(m100+1,100)]: #M runs from m+0.01 to 0.99
             m_it=m100/100
             M_it=M100/100
+            
             coleps.append(eps)
             colm.append(m_it)
             colM.append(M_it)
@@ -35,23 +35,23 @@ def iteration_inverse(eps):
             L4 = -ln(1/F+(1-1/F)*m_it)+(1-m_it/M_it)
             th_value=max(L3,L4)
 
+            colHypValue.append(n(th_value,digits=8))
+
             ##Numerical maximum
             def L3_numerical(N):
                 return -ln(1/F+(1-1/F)*(m_it+N*M_it)/(N+1))+N*ln((N+1)/(N+(1-M_it)/(1-m_it)))
             maximum_value = find_local_maximum(L3_numerical,0,N_max)
-
             value=max(maximum_value[0], L4)
             
-            colDiffEvol.append(n(value))
-            colHypValue.append(n(th_value))
+            colDiffEvol.append(n(value,digits=8))
+
+            #Difference (Computational value - Theoretical value)
             colDiff.append(n(value-th_value))
+            
+            # Check that theoretical value is equal or larger than computational value. Print out error message otherwise.
             if(value>th_value+sens):
                 print("\nLarger value at (",eps,",",m_it,",",M_it,"): ",value,"+",th_value,"diff:",n(value-th_value))
-                print(maximum_value)
-            if(abs(th_value-value)>error):
-                print("\nUntight value at (",eps,",",m_it,",",M_it,"): ",value,"+",th_value,"diff:",n(value-th_value))
-                print(maximum_value)
-
+            
             #Check whether the superfluous term is actually superfluous
             final_maximum = theoretical_eps_combined(eps,m_it,M_it)
             superfluous_term = L4
@@ -72,8 +72,9 @@ d={'Epsilon': coleps, 'm': colm, 'M': colM, 'DiffEvol': colDiffEvol, 'HypValue':
 df = pd.DataFrame(data=d)
 df.to_csv('output_inverse.csv',index=False,sep=';')
     
-print("Minimum difference (empirical - theoretical): ", df["Difference"].min())
-print("Maximum difference (empirical - theoretical): ", df["Difference"].max())  
+print("FinalMaximumInverse.py:")
+print("Minimum difference (computational - theoretical): ", df["Difference"].min())
+print("Maximum difference (computational - theoretical): ", df["Difference"].max(),"\n")     
 
 
 

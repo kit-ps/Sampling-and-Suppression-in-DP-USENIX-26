@@ -1,6 +1,7 @@
 from normalize_database import *
 from suppression_algorithm import *
 from graphic_generator import *
+from paperplots import *
 
 def generateFileandGraph(database_name, columns, main_folder_name, number_clusters, range_columns, normalized_range_value=1, list_epsilons=[0.25,0.5,1,2], numberofrepeat: int = 500):
     path_CSVfiles = os.path.join(main_folder_name,"CSVfiles","_".join(columns))
@@ -13,14 +14,12 @@ def generateFileandGraph(database_name, columns, main_folder_name, number_cluste
     if not os.path.exists(path_plots):
         os.makedirs(path_plots)
 
-    #Normalize database and restrict to the columns we are working with
+    ## Normalize database and restrict to the columns we are working with
     normalized_database_name = os.path.join(main_folder_name,database_name.replace(".csv","_normalized.csv"))
     normalize_database(database_name=database_name, output_file_name=normalized_database_name, columns=columns, normalized_range_value=normalized_range_value)
     df = pd.read_csv(normalized_database_name)
 
-    ##Generate list of (m,M)
-    #m_and_M_large_scale = generate_triangular_list_m_M([0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
-    #m_and_M_equal = [[round(p,5),round(p,5)] for p in np.arange(0.01,1,0.01)]
+    ## Generate list of (m,M)
     m_and_M_equal = [[round(p,5),round(p,5)] for p in np.arange(0,1,0.01)]
     m_and_M_large_scale = [[round(p,5),round(q,5)] for p in np.arange(0.1,1,0.1) for q in np.arange(p,1,0.1)]
     ##We generate the combined list to simplify code. We remove repeats
@@ -29,7 +28,7 @@ def generateFileandGraph(database_name, columns, main_folder_name, number_cluste
         if value not in m_and_M_combined:
             m_and_M_combined.append(value)
 
-    ##Generate the list of average distances
+    ## Generate the list of average distances
     file_name_average_distance_list = os.path.join(main_folder_name,"_".join(columns)+"_distances.csv")
     generate_average_distance_list(file_name_output=file_name_average_distance_list, df=df, columns=columns, normalized_range_value=normalized_range_value)
 
@@ -71,3 +70,6 @@ def generateFileandGraph(database_name, columns, main_folder_name, number_cluste
                             csv_path_list_M_Average=csv_path_list_M_Average, csv_path_list_M_Variance=csv_path_list_M_Variance, 
                             csv_path_list_MoSChange_Average=csv_path_list_MoSChange_Average, csv_path_list_MoSChange_Variance=csv_path_list_MoSChange_Variance, 
                             epsilon_list=list_epsilons, plot_type=plot_type, numberofrepeat=numberofrepeat)
+
+    ## Generates a separate folder with only the plots used in the paper
+    paper_plots(columns=columns, main_folder_name=main_folder_name, list_epsilons=list_epsilons, numberofrepeat=numberofrepeat)

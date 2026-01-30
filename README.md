@@ -1,11 +1,13 @@
 # Experiments on Sampling and Suppression
 
-This repository includes the complete code for the experiments and plots on the effects of sampling and outlier-score suppression on the privacy–utility tradeoff in differential privacy (DP) for the USENIX Security '26 submission
+This repository includes the complete code for the experiments and plots on the effects of sampling and outlier-score suppression on the privacy–utility tradeoff in differential privacy (DP) for the USENIX Security '26 paper
 
 *The Adverse Effects of Omitting Records in Differential Privacy:
 How Sampling and Suppression Degrade the Privacy–Utility Tradeoff*
 
 by Àlex Miranda-Pascual, Javier Parra-Arnau, and Thorsten Strufe. 
+
+This artifact is permanently available at https://zenodo.org/records/17977528.
 
 ## Overview 
 
@@ -16,21 +18,38 @@ Each folder contains an independent experiment. These are:
 * `Clustering-DPLloyd` contains our experiment on the DPLloyd clustering algorithm.
 * `Clustering-kmedian` contains our experiment on the $k$-median clustering algorithm.
 * `PrivacyBound` contains the code that checks whether the empirical result we obtain match our theorized values for Theorem 5.4.
-* `PrivacyBoundPlots` contains the code that generates Figures 2 and 4 of our paper. 
+* `PrivacyBoundPlots` contains the code that generates Figures 2 and 4 of our paper (Figures 2 and 75 of the long version). 
 
-Each folder has a respective README file that explains the details of each experiment. 
+Each folder has a respective README file that explains the details of each experiment.  
 
-We also upload the resulting CSV files and plots used in the paper. 
+Note that the experiments are randomized. Included in each folder, we provide all statistical values in CSV files and plots that used in the paper.
 
-All code is written in Python 3.8.20.
+## Technical Description and Setup Instructions
 
-## Databases source
+For running the experiment, we used a server with an AMD EPYC 7702P 64-Core Processor running in Ubuntu 24.04. We note that approximately 1.5&#8201;GB of RAM is sufficient to run our code. All our code is written in Python 3.8.20. Some files contain parallelizations with 64 cores. 
+
+The experiments in each folder are independent from each other but share a common setup. The necessary requirements can be set up by running 
+
+```bash
+conda env create -f environment.yml
+```
+
+Running `main.py` from each folder file covers the whole experiment (further details are given in each README file): 
+
+```bash
+python main.py
+```
+
+Running every `main.py` one after the other takes a bit more than 5&nbsp;days.  
+
+## Sources of the Used Databases
 
 The databases used for each experiment are included in their respective folder. A total of three different public databases are used and we explain here their sources.
 
 ### "Adult" database
 
 The Adult database was derived from the US Census Bureau’s 1994–1995 Current Population Survey (CPS) can be downloaded from 
+
 [1] B. Becker and R. Kohavi, “Adult”. UCI Machine Learning Repository, 1996. doi: 10.24432/C5XW20.
 
 ### "Census" database
@@ -59,3 +78,20 @@ We use directly postprocessing into numerical variables used in Rodríguez-Hoyos
 [4] A. Rodríguez-Hoyos, J. Estrada-Jiménez, D. Rebollo-Monedero, J. Parra-Arnau, and J. Forné, 
 “Does $k$-Anonymous Microaggregation Affect Machine-Learned Macrotrends?”, 
 IEEE Access, vol. 6, pp. 28258–28277, 2018, doi: 10.1109/ACCESS.2018.2834858.
+
+## License
+
+Copyright (C) 2025–2026 Àlex Miranda-Pascual, Javier Parra-Arnau, and Thorsten Strufe
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see https://www.gnu.org/licenses/.

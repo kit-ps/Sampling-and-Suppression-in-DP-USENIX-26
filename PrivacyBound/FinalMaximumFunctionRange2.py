@@ -24,6 +24,7 @@ d={'Epsilon': gcoleps, 'm': gcolm, 'M': gcolM, 'DiffEvol': gcolDiffEvol, 'HypVal
 df = pd.DataFrame(data=d)
 df.to_csv('output_range2.csv',index=False,sep=';')
 
-print("Minimum difference (empirical - theoretical): ", df["Difference"].min())
-print("Maximum difference (empirical - theoretical): ", df["Difference"].max())  
+print("FinalMaximumFunctionRange2.py:")
+print("Minimum difference (computational - theoretical): ", df["Difference"].min())
+print("Maximum difference (computational - theoretical): ", df["Difference"].max(),"\n")     
 

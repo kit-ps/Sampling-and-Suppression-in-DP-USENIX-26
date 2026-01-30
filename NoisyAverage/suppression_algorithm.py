@@ -6,17 +6,6 @@ from suppression_privacy_parameters import *
 from generate_average_distance_list import *
 os.environ['TF_XLA_FLAGS']= '--tf_xla_enable_xla_devices'
 
-"""From a list of values, generate the list of pairs (m,M) such that m and M are elements of the list and m<=M"""
-def generate_triangular_list_m_M(list_input: list=[0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])-> list:
-    m_and_M=[]
-
-    for m in list_input:
-        for M in list_input:
-            if m<=M:
-                m_and_M.append([m,M])
-
-    return m_and_M
-
 """Noise to add in the Laplace mechanism"""
 def Laplace_noise(epsilon: float=1, sensitivity=1):
     if epsilon<=0:
@@ -90,7 +79,7 @@ def suppressed_dataset(probabilities, dataset):
             new_dataset.append(record)
     return new_dataset
 
-"""Iteration of the base algorithm of MoS (compute suppression and average of suppressed database)"""
+"""Iteration of the base algorithm of MoS (run outlier-score suppression and find average of records in suppressed database)"""
 def iteration_suppression(arg):
     m, M, original_average, probability_of_being_sampled_list, df = arg
 
@@ -103,7 +92,7 @@ def iteration_suppression(arg):
     suppressed_database_average = suppressed_database_sum/suppressed_database_number_of_elements
     return [m, M, original_average, suppressed_database_average, suppressed_database_sum, suppressed_database_number_of_elements]
 
-"""Generate numberofrepeat iterations of suppressed databases for every pair (m,M) and computes its average (only needed parameter)"""
+"""Generate numberofrepeat iterations of suppressed databases for every pair (m,M) and compute its average (only needed parameter)"""
 def generate_iterations_suppressed_database(output_file_name, df, path_average_distances, m_and_M, numberofrepeat):
     header=["m", "M","original_average", "suppressed_database_average", "suppressed_database_sum", "suppressed_database_number_of_elements"]
     element=[]

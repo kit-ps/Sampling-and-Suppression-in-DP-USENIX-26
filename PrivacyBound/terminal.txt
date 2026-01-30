@@ -1,0 +1,20 @@
+FinalMaximumFunctionEpsilon0.py:
+Minimum difference (computational - theoretical):  -0.0000211028023500148
+Maximum difference (computational - theoretical):  1.65524525849725e-7 
+
+FinalMaximumFunctionRange1.py:
+Minimum difference (computational - theoretical):  -0.000132742752638748
+Maximum difference (computational - theoretical):  1.62891470090187e-7 
+
+FinalMaximumFunctionRange2.py:
+Minimum difference (computational - theoretical):  -0.00171485662316506
+Maximum difference (computational - theoretical):  1.62908714962384e-7 
+
+FinalMaximumFunctionRange3.py:
+Minimum difference (computational - theoretical):  -0.00173019142715702
+Maximum difference (computational - theoretical):  1.63989412271803e-7 
+
+FinalMaximumInverse.py:
+Minimum difference (computational - theoretical):  -6.41123387712383e-9
+Maximum difference (computational - theoretical):  1.63040350054100e-7 
+

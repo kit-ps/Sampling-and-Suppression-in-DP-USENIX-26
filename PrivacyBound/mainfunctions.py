@@ -8,7 +8,7 @@ tol_diff_evol = 1E-6 #Tolerance of the differential evolution
 maxiter_diff_evol = 2500 #Maximum number of iterations in differential evolution
 
 ### Computations for epsilon>0
-##Empirical maximization of the function (maximization with respect to N, pJ, pk, c, and t).
+##Computational maximization of the function (maximization with respect to N, pJ, pk, c, and t).
 #The maximum according to differential_evolution over m and M
 def diff_evol(eps,m,M):
     F=exp(eps)
@@ -115,8 +115,8 @@ def diff_evol(eps,m,M):
     
     DegenerateValues = max(H11,H10M,H22,H21a,H21b,H20M)
 
-    ##Check if degenerate cases are larger or not
-    if DegenerateValues >= max(-result_edges['fun'],-result_diagonal['fun'],-result_edges_limit['fun'],-result_diagonal_limit['fun']):
+    ##Check that degenerate cases are not larger than main cases. Return error otherwise.
+    if DegenerateValues > max(-result_edges['fun'],-result_diagonal['fun'],-result_edges_limit['fun'],-result_diagonal_limit['fun']):
         print("Degenerate value are larger for (",eps,",",m,",",M,").",DegenerateValues) 
 
     #Return larger value
@@ -247,8 +247,8 @@ def diff_evol_eps0(m,M):
     
     DegenerateValues = max(H1,H22,H21b)
 
-    ##Check if degenerate cases are larger or not
-    if DegenerateValues >= max(-result_edges['fun'],-result_diagonal['fun']):
+    ##Check that degenerate cases are not larger than main cases. Return error otherwise. 
+    if DegenerateValues > max(-result_edges['fun'],-result_diagonal['fun']):
         print("Degenerate value are larger for (0,",m,",",M,"): ",DegenerateValues) 
 
     #Return larger value
@@ -288,7 +288,6 @@ def theoretical_eps_combined(eps,m,M):
 
 #### Iterations for epsilon>0
 sens = 9E-6 #Rounding sensitivity 
-error = 1E-3 #Maximum allowed error for alert message
 
 def iteration(eps):
 
@@ -305,21 +304,25 @@ def iteration(eps):
         for M100 in [M for M in range(m100+1,100)]: #M runs from m+0.01 to 0.99
             m_it=m100/100
             M_it=M100/100
+            
             coleps.append(eps)
             colm.append(m_it)
             colM.append(M_it)
-            #time_start=time.time()
+            
+            #Computational value (we take - since we added it previously)
             diff_evol_result=diff_evol(eps,m_it,M_it)
             value=-diff_evol_result['fun']
-            th_value=theoretical_eps(eps,m_it,M_it) ##Different function
-            colDiffEvol.append(n(value))
-            colHypValue.append(n(th_value[1]))
+            colDiffEvol.append(n(value,digits=8))
+
+            #Theoretical value
+            th_value=theoretical_eps(eps,m_it,M_it) ##Different function for eps==0
+            colHypValue.append(n(th_value[1],digits=8))
+
+            #Difference (Computational value - Theoretical value)
             colDiff.append(n(value-th_value[1]))
 
+            # Check that theoretical value is equal or larger than computational value. Print out error message otherwise. 
             if (value > th_value[1] + sens):
                 print("\nLarger value at (", eps, ",", m_it, ",", M_it, "): ", value, "+", th_value, "diff:", n(value - th_value[1]), "\n", diff_evol_result, flush=True)
-
-            if (abs(th_value[1] - value) > error):
-                print("\nUntight value at (", eps, ",", m_it, ",", M_it, "): ", value, "+", th_value, "diff:", n(value - th_value[1]), "\n", diff_evol_result, flush=True)
 
     return coleps,colm,colM,colDiffEvol,colHypValue,colDiff

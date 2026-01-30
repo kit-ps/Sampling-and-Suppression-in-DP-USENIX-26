@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+plt.rcParams['pdf.fonttype'] = 42  #Embed TTF fonts as Type 42
+plt.rcParams['ps.fonttype'] = 42
 from scipy import stats
 import warnings
 warnings.filterwarnings("ignore", message="invalid value")
@@ -66,7 +68,7 @@ def theoretical_eps_all(eps,m,M):
 
 
 
-### Plot of suppression
+### Plot of outlier-score suppression
 def generate_plot_suppression(plot_path_start, csv_path, plot_values, statistic, error_type, epsilon, list_m_and_M, file_name_m_and_M, plots_limits, include_title=True):
     ## Select points to plot
     df_all = pd.read_csv(csv_path)
@@ -185,12 +187,8 @@ def generate_plot_suppression(plot_path_start, csv_path, plot_values, statistic,
 
 
 ### Plot of uniform Poisson sampling
-def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M_Average, csv_path_list_M_Variance, csv_path_list_MoSChange_Average, csv_path_list_MoSChange_Variance, epsilon_list, plot_type, error_type, mechanism_name, numberofrepeat, include_p1=True, include_title=True):
+def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M_Average, csv_path_list_M_Variance, csv_path_list_MoSChange_Average, csv_path_list_MoSChange_Variance, epsilon_list, plot_type, error_type, mechanism_name, numberofrepeat, include_title=True):
     fig, ax = plt.subplots()
-
-    ##Filter the csv files that contain the statistic we consider (either Average or Variance)
-    #csv_path_list_M = filter(lambda x: x.endswith(statistic + ".csv"), csv_path_list_M)
-    #csv_path_list_MoSChange = filter(lambda x: x.endswith(statistic + ".csv"), csv_path_list_MoSChange)
     
     #colors = iter(mpl.colors.TABLEAU_COLORS.values())
     colors = iter(["#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7"])
@@ -233,17 +231,7 @@ def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M_Aver
         if df_M_plot_Average.shape[0]==0:
             continue
 
-        ##If include_p1 selected, include the plot for the sampling rate p=1 (m=0). 
-        ##We select in this case the value of df_M_plot for m=0.01 (for both df)
-        #if include_p1==True:
-        #    value_p1_Average = df_M_plot_Average["stat_AE_"+mechanism_name].iloc[0]
-        #    df_M_plot_Average = pd.concat([pd.DataFrame([[0,value_p1_Average]], columns=df_M_plot_Average.columns), df_M_plot_Average], ignore_index=True).sort_values(by=["m"])
-        #    df_MoSChange_plot_Average = pd.concat([pd.DataFrame([[0,value_p1_Average]], columns=df_MoSChange_plot_Average.columns), df_MoSChange_plot_Average], ignore_index=True).sort_values(by=["m"])
-
-        #    value_p1_Variance = df_M_plot_Variance["stat_AE_"+mechanism_name].iloc[0]
-        #    df_M_plot_Variance = pd.concat([pd.DataFrame([[0,value_p1_Variance]], columns=df_M_plot_Variance.columns), df_M_plot_Variance], ignore_index=True).sort_values(by=["m"])
-        #    df_MoSChange_plot_Variance = pd.concat([pd.DataFrame([[0,value_p1_Variance]], columns=df_MoSChange_plot_Variance.columns), df_MoSChange_plot_Variance], ignore_index=True).sort_values(by=["m"])
-
+        
 
         if mechanism_name=="laplace":
             DP_label = str(eps)+"-DP"

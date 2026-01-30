@@ -4,13 +4,17 @@ import scipy
 import os
 from functools import lru_cache 
 
+"""Calculate delta after outlier-score suppression"""
 def calculate_delta_suppression(delta, m):
     delta_suppression=delta*(1-m)
     return delta_suppression
 
+"""Calculate the inverse delta: 
+the value such that after applying outlier-score suppression, we obtain the given delta"""
 def calculate_delta_suppression_inverse(delta, m):
     return delta/(1-m)
 
+"""Calculate the maximum of L1(p) for epsilon calculation"""
 def calculate_L1(m: float, M: float, eps: float)-> float:
     F=np.exp(eps)
     if eps==0:
@@ -38,6 +42,7 @@ def calculate_L1(m: float, M: float, eps: float)-> float:
     
     return L1  
 
+"""Calculate the maximum of L2(p) for epsilon calculation"""
 def calculate_L2(m: float, M: float, eps: float)-> float:
     F=np.exp(eps)
     if eps==0:
@@ -57,11 +62,13 @@ def calculate_L2(m: float, M: float, eps: float)-> float:
     L2=np.log(inside_of_log) + p*(M/m) +(1-p)*(1-((M+m-p*M)/(2-p)))/(1-M)-1
     return L2
 
+"""Calculate the maximum of L3 for epsilon calculation"""
 def calculate_L3(m: float, M: float, eps: float)-> float:
     F=np.exp(eps)
     L3= -(np.log(1/F + (1-1/F)*M))  + (1- (1-M)/(1-m))
     return L3
 
+"""Calculate epsilon after outlier-score suppression"""
 @lru_cache
 def calculate_eps_suppression(m: float, M: float, eps: float)-> float:
     if (m==M):
@@ -78,13 +85,17 @@ def calculate_eps_suppression(m: float, M: float, eps: float)-> float:
         eps_suppression=np.amax([L1, L2, L3])
         return eps_suppression
 
+"""Calculate the inverse epsilon: 
+the value such that after applying outlier-score suppression, we obtain the given epsilon"""
 @lru_cache
 def calculate_eps_suppression_inverse(m: float, M: float, eps: float):
     eps_suppression_for_eps0 = calculate_eps_suppression(m,M,0)
 
+    # If given eps is lower than the corresponding value for eps=0, the inverse does not exist
     if eps<eps_suppression_for_eps0:
         return float("nan")
 
+    # Return 0 if eps is very close to 0 (avoid float errors)
     if np.isclose(eps,eps_suppression_for_eps0):
         return 0
 
