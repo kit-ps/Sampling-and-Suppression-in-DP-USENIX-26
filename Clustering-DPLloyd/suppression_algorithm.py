@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import tqdm
 from multiprocessing import Pool
 from suppression_privacy_parameters import *
 from generate_average_distance_list import *
@@ -51,7 +52,7 @@ def iteration_suppression(arg):
     return [m, M, epsilon, NICV]
 
 """Compute MoS for Clustering"""
-def MoS_Clustering(output_file_name, df, columns, path_average_distances, m_and_M, number_clusters, epsilon, normalized_range_value, number_iterations_DPLloyd, EpsDeltaChange, numberofrepeat):
+def MoS_Clustering(output_file_name, df, columns, path_average_distances, m_and_M, number_clusters, epsilon, normalized_range_value, number_iterations_DPLloyd, EpsDeltaChange, pbar, repetitions):
     number_dimensions = len(columns)
 
     header=["m", "M", "epsilon_of_M", "NICV"]
@@ -69,11 +70,13 @@ def MoS_Clustering(output_file_name, df, columns, path_average_distances, m_and_
         else:
             epsilon_of_M = epsilon
 
-        for k in range(numberofrepeat):
+        for k in range(repetitions):
             jobs.append((m, M, epsilon_of_M, probability_of_being_sampled_list, df, number_dimensions, number_clusters, number_iterations_DPLloyd, normalized_range_value))
     
     with Pool(64) as pool:
-        element.extend(pool.map(iteration_suppression, jobs))
+        for result in pool.imap(iteration_suppression, jobs):
+            element.append(result)
+            pbar.update(1)
 
     df=pd.DataFrame(element, columns=header)
     df.to_csv(output_file_name, index=False)
@@ -95,7 +98,7 @@ def iteration_without_suppression(arg):
 
 
 """Compute M for Clustering"""
-def M_Clustering(output_file_name, df, columns, m_and_M, epsilon, number_clusters, normalized_range_value, number_iterations_DPLloyd, EpsDeltaChange, numberofrepeat):
+def M_Clustering(output_file_name, df, columns, m_and_M, epsilon, number_clusters, normalized_range_value, number_iterations_DPLloyd, EpsDeltaChange, pbar, repetitions):
     database_array=np.array(df)
     number_dimensions = len(columns)
 
@@ -110,11 +113,13 @@ def M_Clustering(output_file_name, df, columns, m_and_M, epsilon, number_cluster
         else:
             epsilon_of_M = epsilon
     
-        for iteration in range(numberofrepeat):
+        for iteration in range(repetitions):
             jobs.append((m, M, epsilon_of_M, database_array, number_dimensions, number_clusters, number_iterations_DPLloyd, normalized_range_value))
     
     with Pool(64) as pool:
-        element.extend(pool.map(iteration_without_suppression, jobs))
+        for result in pool.imap(iteration_without_suppression, jobs):
+            element.append(result)
+            pbar.update(1)
 
     new_df=pd.DataFrame(element, columns=header)
     new_df.to_csv(output_file_name, index=False)

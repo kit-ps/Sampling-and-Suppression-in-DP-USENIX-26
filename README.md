@@ -28,10 +28,11 @@ Note that the experiments are randomized. Included in each folder, we provide al
 
 For running the experiment, we used a server with an AMD EPYC 7702P 64-Core Processor running in Ubuntu 24.04. We note that approximately 1.5&#8201;GB of RAM is sufficient to run our code. All our code is written in Python 3.8.20. Some files contain parallelizations with 64 cores. 
 
-The experiments in each folder are independent from each other but share a common setup. The necessary requirements can be set up by running 
+The experiments in each folder are independent from each other but share a common setup. For our experiments, we work with Conda and its environments. We recommend following their user guide to install Conda: https://docs.conda.io/projects/conda/en/stable/user-guide/index.html. We used the version `conda 24.7.1`. After installing Conda, the necessary requirements can be set up by creating and activating the environment `SamplingAndSuppression` contained in the `environment.yml` file: 
 
 ```bash
 conda env create -f environment.yml
+conda activate SamplingAndSuppression
 ```
 
 Running `main.py` from each folder file covers the whole experiment (further details are given in each README file): 

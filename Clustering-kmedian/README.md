@@ -21,39 +21,50 @@ The code is written in Python 3.8.20.
 
 ## Setup
 
-The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured by running
+The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured and activated by running
 
 ```bash
 conda env create -f environment.yml
-```
+conda activate SamplingAndSuppression
+``` 
 
 ## <a name="how-to-run">How to Run</a>
 
 Run the `main.py` file to obtain an instantation of the experiment with the parameters and databases used in the paper (recall that the experiment contains randomization). 
+
+The code can be run for other parameters or databases with the following command:
+
+```bash
+	python main.py --database-name database1.csv --data-domain-name database1_domain.csv --columns row1 row2 --main-folder-name Database1 --number-clusters 4 --list-epsilons 0.25 0.5 1 2 --repetitions 20
+```
+
+The necessary and optional parameters are the following:
+
+* `database-name`: Path of the database to test (a CSV file with labeled rows and no indices).
+* `data-domain-name`: Path of the data domain (a CSV containing every possible record in the data universe)
+* `columns`: List of the columns name of the database to test (must be congruent with the data domain).
+* `main-folder-name`: Name of the main folder where the CSV files and plots will be stored (in `str` format). 
+* `number-clusters`: Number of clusters for the clustering algorithm.
+* `list-epsilons`: List of epsilon values the experiment runs for. It must be introduced as a list of numerical values, all larger than 0 as seen in the command line. It is an optional parameter: The default is set to `0.25 0.5 1 2`. 
+* `repetitions`: Number of repetitions to be computed for each value `(m,M)`. An integer must be introduced. It is an optional parameter: The default is set to `20`.
+
+We generated a simple synthetic database `database1.csv` (and its domain file `database1_domain.csv`) by running the `generate_database.py` file. We used this database in our experiment.
 
 Alternatively, the code can be run for other parameters or databases, by creating and running a `.py` file with the following command:
 
 ```bash
 from principal_function import *
 
-generateFileandGraph(database_name="database1.csv", data_domain_name="database1_domain.csv", columns=["row1", "row2"], main_folder_name="Database1", number_clusters=4, numberofrepeat=20)
+generateFileandGraph(database_name="database1.csv", data_domain_name="database1_domain.csv", columns=["row1", "row2"], main_folder_name="Database1", number_clusters=4, list_epsilons=[0.25,0.5,1,2], repetitions=20)
 ```
 
-The `generateFileandGraph` function generates all the CSV files and plots for the specified database. The inputs of this function are the following:
-
-* `database_name`: Path of the database to test (a CSV file with labeled rows and no indices).
-* `data_domain_name`: Path of the data domain (a CSV containing every possible record in the data universe)
-* `columns`: List of the columns name of the database to test (each in `str` format).
-* `main_folder_name`: Name of the main folder where the CSV files and plots will be stored (in `str` format). 
-* `number_clusters`: Number of clusters for the clustering algorithm.
-* `list_epsilons`: List of epsilon values the experiment runs for. It must be introduced as a list of numerical values, all larger than 0. The default parameter is set to `[0.25,0.5,1,2]`. 
-* `numberofrepeat`: Number of repetitions to be computed for each value `(m,M)`. An integer must be selected.
-
-For our test, we generated a simple synthetic database `database1.csv` (and its domain file `database1_domain.csv`) by running the `generate_database.py` file. This database is used in our experiment.
+The `generateFileandGraph` function generates all the CSV files and plots for the specified database. The inputs are equivalent to the parameters above.
 
 ## Time to Run
 
-The time to run `main.py` is dependent on the size of the database. In our case, the run on the `database1` database took slightly more than a day (26&#8201;h). The code contains a parallelization into 64 pools.
+The time to run is dependent on the size of the database and number of iterations. Progress bars show the amount of computations left. Note that two progress bars generate per database execution: The first one covers the generation of average distances between the records, and the second the actual computation of the experiment. After the progress bars have been completed, the code takes a couple minutes to generate the plots. 
+
+In our case, the run on the `database1` database took slightly more than a day (26&#8201;h). The code contains a parallelization into 64 pools.
 
 ## <a name="output">Output</a>
 
@@ -63,13 +74,13 @@ The output CSV files and plots are all included in the directory: `[main_folder_
 
 Inside the `CSVfiles` and `Plots` folders, a subfolder with the name created from concatenating the strings in `columns` is created. The CSV files in `CSVfiles`/ `[all names in the [columns] list]` are:
 
-* Files of the type `eps=[epsilon]_[mechanism].csv` containing the average cost of the $k$-median algorithm for every of the `numberofrepeat` iterations. A missing number appearing in the CSV file means that the mechanism could not be run for the given epsilon parameter. One file is generated for every `epsilon` in `list_epsilons`, and there are four `mechanism` variants:
+* Files of the type `eps=[epsilon]_[mechanism].csv` containing the average cost of the $k$-median algorithm for every of the `repetitions` iterations. A missing number appearing in the CSV file means that the mechanism could not be run for the given epsilon parameter. One file is generated for every `epsilon` in `list_epsilons`, and there are four `mechanism` variants:
 	* `M`: mechanism NoisyAverage (M) without suppression run for the given epsilon.
 	* `MoS`: mechanism NoisyAverage (M) with suppression (S) run for the given epsilon.
 	* `M_ChangeEpsDelta`: mechanism NoisyAverage (M) without suppression run for the epsilon that ensures that M and MoS have the same privacy parameters.  
 	* `MoS_ChangeEpsDelta`: mechanism NoisyAverage (M) with suppression (S) run for the epsilon that ensures that M and MoS have the same privacy parameters.
-* Files of the type `eps=[epsilon]_[mechanism]_[mechanism]_Average.csv`, where the empirical mean over the numerical values of `numberofrepeat` iterations is computed for every `(m,M)`.
-* Files of the type `eps=[epsilon]_[mechanism]_[mechanism]_Variance.csv`, where the empirical variance over the numerical values of `numberofrepeat` iterations is computed for every `(m,M)`.
+* Files of the type `eps=[epsilon]_[mechanism]_[mechanism]_Average.csv`, where the empirical mean over the numerical values of `repetitions` iterations is computed for every `(m,M)`.
+* Files of the type `eps=[epsilon]_[mechanism]_[mechanism]_Variance.csv`, where the empirical variance over the numerical values of `repetitions` iterations is computed for every `(m,M)`.
 * Files of the type `eps=[epsilon]_[mechanism]_combined_[Average/Variance].csv` containing the absolute error differences of the mean/variance of M minus those of MoS, of M minus those of MoSChangeEpsDelta, and of MChangeEpsDelta minus those of MoS for every `(m,M)`. These are used in the plot generation.
 
 Each CSV files contains the statistic relevant for both the sampling and outlier-score suppression evaluations. 
@@ -87,7 +98,7 @@ In addition, the code generates a separate folder `PaperPlots` that contains onl
 
 ## Results and Plots for the Paper
 
-The file `main.py` contains the experiment we ran for the $k$-median clustering and the outputs are included in the respective folders. Their respective outputs are included in the respectively named folders as mentioned before. Note that our experiment covers more cases and plots than those included in the paper. Therefore, we provide copies of the plots used in `PaperPlots` folder and we list them here:
+The file `main.py` contains the experiment we ran for the $k$-median clustering, including the exact plots used in the paper. The outputs are included in the respectively named folders as mentioned before. Note that our experiment covers more cases and plots than are included in the paper. The `PaperPlots` folder contains only the plots of the evaluations shown in the paper. Running the code for other variables will also include the equivalent subset of evaluations in this folder. Currently, the `PaperPlots` folder contains all the plots used in the paper and only those plots. The `ViewPaperPlots.html` file in the main folder allows the reader to easily find and open all the figures shown in the paper and its long version. We also list them here:
 
 * The plot covering the evaluation for sampling (Section 3). Forms part of Appendix A.3 (long version):
 	* `row1_row2_Poisson_sampling_Average+SD.pdf`: Figure 14 (left) in long version.

@@ -19,11 +19,12 @@ The code is written in Python 3.8.20.
 
 ## Setup
 
-The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured by running
+The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured and activated by running
 
 ```bash
 conda env create -f environment.yml
-```
+conda activate SamplingAndSuppression
+``` 
 
 ## How to Run
 

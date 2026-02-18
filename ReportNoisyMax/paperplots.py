@@ -3,7 +3,7 @@ from graphic_generator import *
 from suppression_algorithm import *
 
 ## This function generates directly the precise plots used in our paper (requires the csv files to have been already generated)
-def paper_plots(database_name, column_name, main_folder_name, list_epsilons=[0.25,0.5,1,2], delta=None, numberofrepeat: int = 2000):
+def paper_plots(database_name, column_name, main_folder_name, list_epsilons=[0.25,0.5,1,2], delta=None, repetitions: int = 2000):
     path_CSVfiles = os.path.join(main_folder_name,"CSVfiles",column_name)
 
     path_plots = os.path.join("PaperPlots",main_folder_name,column_name)
@@ -27,7 +27,7 @@ def paper_plots(database_name, column_name, main_folder_name, list_epsilons=[0.2
         file_name_combined = file_name_start + "_combined_Emp_Prob.csv"
 
         #Plots
-        plot_name_start = os.path.join(path_plots, column_name + "_eps=" + str(eps))
+        plot_name_start = os.path.join(path_plots, column_name + "_eps=" + str(eps) + "_delta=" + '%.3e' % delta)
 
         string_possibilities = ["difference_laplace_error_M_minus_MoS", "difference_gaussian_error_M_minus_MoS", "difference_exponential_error_M_minus_MoS", "difference_exponential_mechanism_error_M_minus_MoS",
             "difference_laplace_error_M_minus_MoSChangeEpsDelta", "difference_gaussian_error_M_minus_MoSChangeEpsDelta", "difference_exponential_error_M_minus_MoSChangeEpsDelta", "difference_exponential_mechanism_error_M_minus_MoSChangeEpsDelta"]
@@ -43,7 +43,7 @@ def paper_plots(database_name, column_name, main_folder_name, list_epsilons=[0.2
     for noise_name in ["laplace","gaussian","exponential","exponential_mechanism"]:
         plot_name_start = os.path.join(path_plots, column_name + "_uniform_Poisson_sampling_" + noise_name)
         generate_plot_uniform_Poisson_sampling(plot_path_start=plot_name_start, csv_path_list_M=csv_path_list_M, csv_path_list_MoSChange=csv_path_list_MoSChange, 
-                    epsilon_list=list_epsilons, plot_type="EmpProb+SD", noise_name=noise_name, numberofrepeat=numberofrepeat)
+                    epsilon_list=list_epsilons, plot_type="EmpProb+SD", noise_name=noise_name, repetitions=repetitions)
 
 #paper_plots("adult_train.csv","age","Adult")
 #paper_plots("adult_train.csv","hours-per-week","Adult")

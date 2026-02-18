@@ -1,8 +1,11 @@
 from suppression_algorithm import *
 from graphic_generator import *
 from paperplots import *
+import tqdm
 
-def generateFileandGraph(database_name, column_name, main_folder_name, value_range, list_epsilons=[0.25,0.5,1,2], delta=None, numberofrepeat: int = 2000):
+def generateFileandGraph(database_name, column_name, main_folder_name, value_range, list_epsilons=[0.25,0.5,1,2], delta=None, repetitions: int = 2000):
+    print("Running "+column_name+" column in "+database_name)
+
     path_CSVfiles = os.path.join(main_folder_name,"CSVfiles",column_name)
     # If folder does not exist, create the folder
     if not os.path.exists(path_CSVfiles):
@@ -35,12 +38,14 @@ def generateFileandGraph(database_name, column_name, main_folder_name, value_ran
     file_name_average_distance_list = os.path.join(main_folder_name,column_name+"distances.csv")
     generate_average_distance_list(file_name_output=file_name_average_distance_list, df=df)
 
+    print("Evaluation of mechanism with and without outlier-score suppression (2/2):")
+    pbar = tqdm.tqdm(total=4*repetitions*len(list_epsilons)*len(m_and_M_combined))
     for eps in list_epsilons:
         file_name_start = os.path.join(path_CSVfiles, column_name + "_eps=" + str(eps) + "_delta=" + '%.3e' % delta)
-        MoS_RNM(output_file_name = file_name_start + "_MoS.csv", df=df, path_average_distances=file_name_average_distance_list, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=False, numberofrepeat=numberofrepeat)
-        MoS_RNM(output_file_name = file_name_start + "_MoS_ChangeEpsDelta.csv", df=df, path_average_distances=file_name_average_distance_list, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=True, numberofrepeat=numberofrepeat)
-        M_RNM(output_file_name = file_name_start + "_M.csv", df=df, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=False, numberofrepeat=numberofrepeat)
-        M_RNM(output_file_name = file_name_start + "_M_ChangeEpsDelta.csv", df=df, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=True, numberofrepeat=numberofrepeat)
+        MoS_RNM(output_file_name = file_name_start + "_MoS.csv", df=df, path_average_distances=file_name_average_distance_list, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=False, pbar=pbar, repetitions=repetitions)
+        MoS_RNM(output_file_name = file_name_start + "_MoS_ChangeEpsDelta.csv", df=df, path_average_distances=file_name_average_distance_list, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=True, pbar=pbar, repetitions=repetitions)
+        M_RNM(output_file_name = file_name_start + "_M.csv", df=df, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=False, pbar=pbar, repetitions=repetitions)
+        M_RNM(output_file_name = file_name_start + "_M_ChangeEpsDelta.csv", df=df, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=True, pbar=pbar, repetitions=repetitions)
         
         #Difference computation
         file_name_combined = file_name_start + "_combined_Emp_Prob.csv"
@@ -61,6 +66,7 @@ def generateFileandGraph(database_name, column_name, main_folder_name, value_ran
         for string in string_possibilities:
             for list_m_and_M, file_name_m_and_M, plots_limits in zip([m_and_M_large_scale,m_and_M_short_scale],["10--90","1--9"],[ [[0,1],[0,1]], [[0,0.1],[0,0.1]] ]):
                 generate_plot_suppression(plot_path_start=plot_name_start, csv_path=file_name_combined, plot_values=string, epsilon=eps, list_m_and_M=list_m_and_M, file_name_m_and_M=file_name_m_and_M, plots_limits=plots_limits)
+    pbar.close()
 
     ##Plots for the uniform Poisson sampling case
     csv_path_list_M = [os.path.join(path_CSVfiles, column_name + "_eps=" + str(eps) + "_delta=" + '%.3e' % delta + "_M_Emp_Prob.csv") for eps in list_epsilons]
@@ -69,7 +75,7 @@ def generateFileandGraph(database_name, column_name, main_folder_name, value_ran
     for plot_type in ["EmpProb", "EmpProb+SD"]:
         for noise_name in ["laplace","gaussian","exponential","exponential_mechanism"]:
             plot_name_start = os.path.join(path_plots, column_name + "_uniform_Poisson_sampling_" + noise_name)
-            generate_plot_uniform_Poisson_sampling(plot_path_start=plot_name_start, csv_path_list_M=csv_path_list_M, csv_path_list_MoSChange=csv_path_list_MoSChange, epsilon_list=list_epsilons, plot_type=plot_type, noise_name=noise_name, numberofrepeat=numberofrepeat)
+            generate_plot_uniform_Poisson_sampling(plot_path_start=plot_name_start, csv_path_list_M=csv_path_list_M, csv_path_list_MoSChange=csv_path_list_MoSChange, epsilon_list=list_epsilons, plot_type=plot_type, noise_name=noise_name, repetitions=repetitions)
 
     ## Generates a separate folder with only the plots used in the paper
-    paper_plots(database_name=database_name, column_name=column_name, main_folder_name=main_folder_name, list_epsilons=list_epsilons, delta=delta, numberofrepeat=numberofrepeat)
+    paper_plots(database_name=database_name, column_name=column_name, main_folder_name=main_folder_name, list_epsilons=list_epsilons, delta=delta, repetitions=repetitions)

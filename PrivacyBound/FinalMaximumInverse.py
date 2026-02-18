@@ -1,6 +1,7 @@
 from mainfunctions import *
 from sage.all import *
 import pandas as pd
+import tqdm
 
 sens = 9E-6 #Rounding sensitivity 
 
@@ -23,6 +24,8 @@ def iteration_inverse(eps):
     ##We check for all m and M in 0.01, 0.02, ..., 0.98, 0.99 such that m<M
     for m100 in [m for m in range(1,99)]: #m runs from 0.01 to 0.98 (0.99 is not necessary)
         for M100 in [M for M in range(m100+1,100)]: #M runs from m+0.01 to 0.99
+            pbar.update(1)
+            
             m_it=m100/100
             M_it=M100/100
             
@@ -58,6 +61,9 @@ def iteration_inverse(eps):
             if(superfluous_term>final_maximum[1]+sens):
                 print("\nSuperfluous term larger at (",eps,",",m_it,",",M_it,"): ",final_maximum,"+",superfluous_term,"diff:",n(superfluous_term-final_maximum))
 
+
+print("Checking inverse function:")
+pbar = tqdm.tqdm(total=1799721) #(200+80+91)*(99*98/2) (number of eps times number of m and M)
 ### eps between 0 and 1.99 (step 0.01)
 for eps in [ep/100 for ep in range(0,200)]:    
     iteration_inverse(eps)
@@ -67,6 +73,7 @@ for eps in [ep/10 for ep in range(20,100)]:
 ### eps between 10 and 100 (step 1)
 for eps in [float(ep) for ep in range(10,101)]: 
     iteration_inverse(eps)
+pbar.close()
 
 d={'Epsilon': coleps, 'm': colm, 'M': colM, 'DiffEvol': colDiffEvol, 'HypValue': colHypValue, 'Difference': colDiff}
 df = pd.DataFrame(data=d)

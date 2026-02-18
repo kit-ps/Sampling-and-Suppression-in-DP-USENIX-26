@@ -159,7 +159,7 @@ def generate_plot_suppression(plot_path_start, csv_path, plot_values, list_m_and
 
 
 ### Plot of uniform Poisson sampling
-def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M_Average, csv_path_list_M_Variance, csv_path_list_MoSChange_Average, csv_path_list_MoSChange_Variance, epsilon_list, plot_type, numberofrepeat, include_title=True):
+def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M_Average, csv_path_list_M_Variance, csv_path_list_MoSChange_Average, csv_path_list_MoSChange_Variance, epsilon_list, plot_type, repetitions, include_title=True):
     fig, ax = plt.subplots()
   
     #colors = iter(mpl.colors.TABLEAU_COLORS.values())
@@ -195,13 +195,13 @@ def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M_Aver
         DP_label = str(eps)+"-DP"
 
         #97.5% percentile of the t-Student distribution (df=n-1) for the 95% confidence interval
-        t_value = stats.t.ppf(0.975, numberofrepeat-1)
+        t_value = stats.t.ppf(0.975, repetitions-1)
 
         plot_values_M_Average = df_M_plot_Average["stat_NICV"]
-        plot_values_M_SD = np.sqrt(df_M_plot_Variance["stat_NICV"])*t_value/np.sqrt(numberofrepeat)
+        plot_values_M_SD = np.sqrt(df_M_plot_Variance["stat_NICV"])*t_value/np.sqrt(repetitions)
         plot_values_M_Variance = df_M_plot_Variance["stat_NICV"]
         plot_values_MoSChange_Average = df_MoSChange_plot_Average["stat_NICV"]
-        plot_values_MoSChange_SD = np.sqrt(df_MoSChange_plot_Variance["stat_NICV"])*t_value/np.sqrt(numberofrepeat)
+        plot_values_MoSChange_SD = np.sqrt(df_MoSChange_plot_Variance["stat_NICV"])*t_value/np.sqrt(repetitions)
         plot_values_MoSChange_Variance = df_MoSChange_plot_Variance["stat_NICV"]
         #term is squared for the variance to keep the formula correctly scaled
         

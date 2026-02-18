@@ -3,7 +3,7 @@ from graphic_generator import *
 from suppression_algorithm import *
 
 ## This function generates directly the precise plots used in our paper (requires the csv files to have been already generated)
-def paper_plots(columns, main_folder_name, list_epsilons=[0.25,0.5,1,2], numberofrepeat: int = 20):
+def paper_plots(columns, main_folder_name, list_epsilons=[0.25,0.5,1,2], repetitions: int = 20):
     path_CSVfiles = os.path.join(main_folder_name,"CSVfiles","_".join(columns))
 
     path_plots = os.path.join("PaperPlots","_".join(columns))
@@ -38,6 +38,6 @@ def paper_plots(columns, main_folder_name, list_epsilons=[0.25,0.5,1,2], numbero
     generate_plot_uniform_Poisson_sampling(plot_path_start=plot_name_start, 
                         csv_path_list_M_Average=csv_path_list_M_Average, csv_path_list_M_Variance=csv_path_list_M_Variance, 
                         csv_path_list_MoSChange_Average=csv_path_list_MoSChange_Average, csv_path_list_MoSChange_Variance=csv_path_list_MoSChange_Variance, 
-                        epsilon_list=list_epsilons, plot_type=plot_type, numberofrepeat=numberofrepeat)
+                        epsilon_list=list_epsilons, plot_type=plot_type, repetitions=repetitions)
 
 #paper_plots(["row1", "row2"], "Database1")

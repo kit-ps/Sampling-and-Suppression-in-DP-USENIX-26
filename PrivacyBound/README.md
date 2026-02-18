@@ -19,34 +19,32 @@ The code is written in Python 3.8.20.
 
 ## Setup
 
-The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured by running
+The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured and activated by running
 
 ```bash
 conda env create -f environment.yml
-```
+conda activate SamplingAndSuppression
+``` 
 
 ## <a name="how-to-run">How to Run</a>
 
-The result is obtained by running `main.py`, which runs the following Python scripts (these can also be run individually):
+The result is obtained by running `main.py`, which runs the following two Python scripts (these can also be run individually):
 
-* `FinalMaximumFunctionEps0.py`: Checks and generates the CSV file containing the theoretical and computational result and its difference of the function explained in Remark A.11 (or Remark B.22 in long version of paper) for epsilon = `0` and all `(m,M)` with granularity `0.01`.
-* `FinalMaximumFunctionRange1.py`: Checks and generates the CSV file containing the theoretical and computational result and its difference of the function explained in Remark A.11 (or Remark B.22 in long version of paper) for all epsilon between `0.01` and `1.99` (step=`0.01`) and all `(m,M)` with granularity `0.01`.
-* `FinalMaximumFunctionRange2.py`: Checks and generates the CSV file containing the theoretical and computational result and its difference of the function explained in Remark A.11 (or Remark B.22 in long version of paper) for all epsilon between `2` and `9.9` (step=`0.1`) and all `(m,M)` with granularity `0.01`.
-* `FinalMaximumFunctionRange3.py`: Checks and generates the CSV file containing the theoretical and computational result and its difference of the function explained in Remark A.11 (or Remark B.22 in long version of paper) for all epsilon between `10` and `100` (step=`1`) and all `(m,M)` with granularity `0.01`.
+* `FinalMaximumFunction.py`: Checks and generates the CSV file containing the theoretical and computational result and its difference of the function explained in Remark A.11 (or Remark B.22 in long version of paper) for all epsilon between `0.01` and `1.99` (step=`0.01`), between `2` and `9.9` (step=`0.1`), and between `10` and `100` (step=`1`); and for all `(m,M)` with granularity `0.01`.
 * `FinalMaximumInverse.py`: Checks and generates the CSV file containing the theoretical and computational result and its difference of the function explained in Remark A.11 (or Remark B.24 in long version of paper) for all epsilon previously listed and all `(m,M)` with granularity `0.01`.  
 
 ## Time to Run
 
-Due to the amount of computations, the time to run for all algorithms is around 21&#8201;h: `FinalMaximumFunctionEps0.py` took around 1&#8201;h&#8201;30&#8201;min, `FinalMaximumFunctionRange1.py` took around 11&#8201;h, `FinalMaximumFunctionRange2.py` took around 4&#8201;h&#8201;30&#8201;min, `FinalMaximumFunctionRange3.py` took around 3&#8201;h&#8201;45&#8201;min, and `FinalMaximumInverse.py` took around 20&#8201;min. The files `FinalMaximumFunctionRange1.py`, `FinalMaximumFunctionRange2.py`, and  `FinalMaximumFunctionRange3.py` contain parallelizations with 64 cores. 
+Due to the amount of computations, the time to run for all algorithms is around 21&#8201;h: `FinalMaximumFunction.py` took around 20&#8201;h&#8201;30&#8201;min and `FinalMaximumInverse.py` took around 20&#8201;min. The file `FinalMaximumFunction.py` contains parallelizations with 64 cores. 
 
 ## <a name="output">Output</a>
 
-The first four python files each output a CSV file (`output_epsilon0`, `output_range1`, `output_range2` and `output_range3`) containing the computational (`DiffEvol`) and hypothesized theoretical values (`HypValue`), and its difference (`Difference`=`DiffEvol`−`HypValue`). The script also outputs error messages in the terminal when:
+`FinalMaximumFunction.py` outputs a CSV file (`output.csv`) containing the computational (`DiffEvol`) and hypothesized theoretical values (`HypValue`), and its difference (`Difference`=`DiffEvol`−`HypValue`). The script also outputs error messages in the terminal when:
 * `DiffEvol` is larger than `HypValue` (up to some floating error), which would contradict our claim in the paper.
 * The computational maximum is obtained in a degenerate case, which would contradict our claim in the paper.
 Our script does not output any errors, and so the claim given in the paper holds computationally. The script also prints the largest and smallest values of `Difference` (without taking the absolute value). 
 
-`FinalMaximumInverse.py` outputs on the terminal if an error is reached: 
+`FinalMaximumInverse.py` outputs a CSV file (`output.csv`) containing the computational (`DiffEvol`) and hypothesized theoretical values (`HypValue`), and its difference (`Difference`=`DiffEvol`−`HypValue`).  The script also outputs error messages in the terminal when:
 * `DiffEvol` is larger than `HypValue` (up to some floating error), which would contradict our claim in the paper.
 * The term `L4` is actually not superfluous, which would contradict our claim in the paper.
 Our script does not output any errors, and so the claim given in the paper holds computationally. The script also prints the largest and smallest values of `Difference` (without taking the absolute value). 
@@ -59,4 +57,4 @@ The results are used to verify computationally that our theorized result matches
 
 ## Overview of the Files in the Folder
 
-Apart from the `.py` files mentioned in [How to Run](#how-to-run) and the output (see [Output](#output)), the folder contains `mainfunctions.py`, which gathers the necessary functions to run the comparison for `FinalMaximumFunctionEpsilon0.py`, `FinalMaximumFunctionRange1.py`, `FinalMaximumFunctionRange2.py`, and `FinalMaximumFunctionRange3.py`.
+Apart from the `.py` files mentioned in [How to Run](#how-to-run) and the outputs (see [Output](#output)), the folder contains `mainfunctions.py`, which gathers the necessary functions to run the comparison for `FinalMaximumFunction.py`.

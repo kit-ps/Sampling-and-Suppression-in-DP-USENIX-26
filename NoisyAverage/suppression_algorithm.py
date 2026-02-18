@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import tqdm
 from scipy.stats import norm
 from multiprocessing import Pool
 from suppression_privacy_parameters import *
@@ -92,8 +93,8 @@ def iteration_suppression(arg):
     suppressed_database_average = suppressed_database_sum/suppressed_database_number_of_elements
     return [m, M, original_average, suppressed_database_average, suppressed_database_sum, suppressed_database_number_of_elements]
 
-"""Generate numberofrepeat iterations of suppressed databases for every pair (m,M) and compute its average (only needed parameter)"""
-def generate_iterations_suppressed_database(output_file_name, df, path_average_distances, m_and_M, numberofrepeat):
+"""Generate "N=repetitions" iterations of suppressed databases for every pair (m,M) and compute its average (only needed parameter)"""
+def generate_iterations_suppressed_database(output_file_name, df, path_average_distances, m_and_M, repetitions):
     header=["m", "M","original_average", "suppressed_database_average", "suppressed_database_sum", "suppressed_database_number_of_elements"]
     element=[]
     original_average=df.mean()
@@ -105,17 +106,22 @@ def generate_iterations_suppressed_database(output_file_name, df, path_average_d
         probability_of_being_deleted_list = m+(M-m)*average_distance_df
         probability_of_being_sampled_list = 1-probability_of_being_deleted_list
 
-        for k in range(numberofrepeat):
+        for k in range(repetitions):
             jobs.append((m, M, original_average, probability_of_being_sampled_list, df))
     
+    print("Precompute all suppressed databases (2/3):")
+    pbar = tqdm.tqdm(total=repetitions*len(m_and_M))
     with Pool(64) as pool:
-        element.extend(pool.map(iteration_suppression, jobs))
+        for result in pool.imap(iteration_suppression, jobs):
+            element.append(result)
+            pbar.update(1)
+    pbar.close()
 
     df=pd.DataFrame(element, columns=header)
     df.to_csv(output_file_name, index=False)
 
 """Compute MoS for Laplace and Gaussian average"""
-def MoS_Laplace_and_Gaussian(output_file_name, base_file, m_and_M, value_range, epsilon, delta, EpsDeltaChange):
+def MoS_Laplace_and_Gaussian(output_file_name, base_file, m_and_M, value_range, epsilon, delta, EpsDeltaChange, pbar):
     suppressed_df=pd.read_csv(base_file)
 
     epsilon_of_M_list=[]
@@ -163,6 +169,8 @@ def MoS_Laplace_and_Gaussian(output_file_name, base_file, m_and_M, value_range, 
         average_gaussian_list.append(average_gaussian)
         AE_gaussian_list.append(AE_gaussian_suppression)
 
+        pbar.update(1)
+
     suppressed_df["epsilon_of_M"]=epsilon_of_M_list
     suppressed_df["delta_of_M"]=delta_of_M_list
     suppressed_df["average_laplace"]=average_laplace_list
@@ -176,7 +184,7 @@ def MoS_Laplace_and_Gaussian(output_file_name, base_file, m_and_M, value_range, 
 
 
 """Compute M for Laplace and Gaussian average"""
-def M_Laplace_and_Gaussian(output_file_name, df, m_and_M, epsilon, delta, value_range, EpsDeltaChange, numberofrepeat):
+def M_Laplace_and_Gaussian(output_file_name, df, m_and_M, epsilon, delta, value_range, EpsDeltaChange, pbar, repetitions):
     sumtotal = df.sum()
     original_average = df.mean()
     total_element = df.shape[0]
@@ -192,7 +200,7 @@ def M_Laplace_and_Gaussian(output_file_name, df, m_and_M, epsilon, delta, value_
             epsilon_of_M = epsilon
             delta_of_M = delta
     
-        for iteration in range(numberofrepeat):
+        for iteration in range(repetitions):
             #NoisyAverage with Laplace mechanism
             sumtotal_laplace=sumtotal+Laplace_noise(epsilon=epsilon_of_M/2, sensitivity=sensitivitySummation(value_range))
             total_element_laplace=total_element +Laplace_noise(epsilon=epsilon_of_M/2, sensitivity=1)
@@ -206,6 +214,8 @@ def M_Laplace_and_Gaussian(output_file_name, df, m_and_M, epsilon, delta, value_
             AE_gaussian=np.abs((sumtotal/total_element)-average_gaussian)
 
             element.append([m, M, epsilon_of_M, delta_of_M, original_average, average_laplace, average_gaussian, AE_laplace, AE_gaussian])
+
+            pbar.update(1)
     new_df=pd.DataFrame(element, columns=header)
     new_df.to_csv(output_file_name, index=False)
 

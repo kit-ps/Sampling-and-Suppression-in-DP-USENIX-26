@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import tqdm
 
 def norm_calculation(row1,row2):
     square_sum = 0 
@@ -12,6 +13,8 @@ def generate_average_distance_list(file_name_output, df, columns):
     length_Element=df.shape[0]
     
     #For every element in the database, compute its outlier score and add it to the list
+    print("Generate average distance list (1/2):")
+    pbar = tqdm.tqdm(total=length_Element)
     for _, i in df.iterrows():
         total_sum=0
         for _, j in df.iterrows(): 
@@ -19,7 +22,8 @@ def generate_average_distance_list(file_name_output, df, columns):
             total_sum=total_sum + dist
         outlier_score=total_sum/(length_Element)
         outlier_score_list.append(outlier_score)
+        pbar.update(1)
     df=pd.DataFrame(outlier_score_list, columns=["distances"])
     df.to_csv(file_name_output, index=False)
-    #dataframenumpy=np.array(outlier_score_list)
-    #np.savetxt(file_name_output, dataframenumpy)
+    
+    pbar.close()

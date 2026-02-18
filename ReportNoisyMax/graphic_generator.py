@@ -173,18 +173,18 @@ def generate_plot_suppression(plot_path_start, csv_path, plot_values, epsilon, l
 
 
 ###Wilson confidence interval (95%)
-def Wilson_CI(emp_prob,numberofrepeat):
+def Wilson_CI(emp_prob,repetitions):
     #97.5% percentile of the normal distribution for the 95% confidence interval
     normal_percentile = stats.norm.ppf(0.975)
 
-    term1 = emp_prob + np.power(normal_percentile,2)/(2*numberofrepeat)
-    term2 = normal_percentile/(2*numberofrepeat)*np.sqrt(4*numberofrepeat*emp_prob*(1-emp_prob)+np.power(normal_percentile,2))
-    term3 = (1+np.power(normal_percentile,2)/numberofrepeat)
+    term1 = emp_prob + np.power(normal_percentile,2)/(2*repetitions)
+    term2 = normal_percentile/(2*repetitions)*np.sqrt(4*repetitions*emp_prob*(1-emp_prob)+np.power(normal_percentile,2))
+    term3 = (1+np.power(normal_percentile,2)/repetitions)
 
     return [(term1 - term2)/term3, (term1 + term2)/term3]
 
 ### Plot of uniform Poisson sampling
-def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M, csv_path_list_MoSChange, epsilon_list, plot_type, noise_name, numberofrepeat, include_title=True):
+def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M, csv_path_list_MoSChange, epsilon_list, plot_type, noise_name, repetitions, include_title=True):
     fig, ax = plt.subplots()
 
     #colors = iter(mpl.colors.TABLEAU_COLORS.values())
@@ -225,11 +225,11 @@ def generate_plot_uniform_Poisson_sampling(plot_path_start, csv_path_list_M, csv
         color = next(colors)
         
         plot_values_M_EmpProb = 1-df_M_plot["correct_empirical_probability_"+noise_name]
-        plot_values_M_upper_CI_bound = [Wilson_CI(emp_prob=value,numberofrepeat=numberofrepeat)[1] for value in plot_values_M_EmpProb]
-        plot_values_M_lower_CI_bound = [Wilson_CI(emp_prob=value,numberofrepeat=numberofrepeat)[0] for value in plot_values_M_EmpProb]
+        plot_values_M_upper_CI_bound = [Wilson_CI(emp_prob=value,repetitions=repetitions)[1] for value in plot_values_M_EmpProb]
+        plot_values_M_lower_CI_bound = [Wilson_CI(emp_prob=value,repetitions=repetitions)[0] for value in plot_values_M_EmpProb]
         plot_values_MoSChange_EmpProb = 1-df_MoSChange_plot["correct_empirical_probability_"+noise_name]
-        plot_values_MoSChange_upper_CI_bound = [Wilson_CI(emp_prob=value,numberofrepeat=numberofrepeat)[1] for value in plot_values_MoSChange_EmpProb]
-        plot_values_MoSChange_lower_CI_bound = [Wilson_CI(emp_prob=value,numberofrepeat=numberofrepeat)[0] for value in plot_values_MoSChange_EmpProb]
+        plot_values_MoSChange_upper_CI_bound = [Wilson_CI(emp_prob=value,repetitions=repetitions)[1] for value in plot_values_MoSChange_EmpProb]
+        plot_values_MoSChange_lower_CI_bound = [Wilson_CI(emp_prob=value,repetitions=repetitions)[0] for value in plot_values_MoSChange_EmpProb]
         #term is squared for the variance to keep the formula correctly scaled
 
         if plot_type=="EmpProb":

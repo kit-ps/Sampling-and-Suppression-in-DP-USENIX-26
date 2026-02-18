@@ -1,8 +1,11 @@
 from suppression_algorithm import *
 from graphic_generator import *
 from paperplots import *
+import tqdm
 
-def generateFileandGraph(database_name, column_name, main_folder_name, value_range, list_epsilons=[0.25,0.5,1,2], delta=None, numberofrepeat: int = 500):
+def generateFileandGraph(database_name, column_name, main_folder_name, value_range, list_epsilons=[0.25,0.5,1,2], delta=None, repetitions: int = 500):
+    print("Running "+column_name+" column in "+database_name)
+    
     path_CSVfiles = os.path.join(main_folder_name,"CSVfiles",column_name)
     # If folder does not exist, create the folder
     if not os.path.exists(path_CSVfiles):
@@ -38,14 +41,16 @@ def generateFileandGraph(database_name, column_name, main_folder_name, value_ran
 
     ##Generate base of suppressed database for MoS (simplifies some computations)
     file_name_base = os.path.join(path_CSVfiles, column_name + "_base.csv")
-    generate_iterations_suppressed_database(output_file_name=file_name_base, df=df, path_average_distances=file_name_average_distance_list, m_and_M=m_and_M_combined, numberofrepeat=numberofrepeat)
+    generate_iterations_suppressed_database(output_file_name=file_name_base, df=df, path_average_distances=file_name_average_distance_list, m_and_M=m_and_M_combined, repetitions=repetitions)
 
+    print("Evaluation of mechanism with and without outlier-score suppression (3/3):")
+    pbar = tqdm.tqdm(total=4*repetitions*len(list_epsilons)*len(m_and_M_combined))
     for eps in list_epsilons:
         file_name_start = os.path.join(path_CSVfiles, column_name + "_eps=" + str(eps) + "_delta=" + '%.3e' % delta)
-        MoS_Laplace_and_Gaussian(output_file_name = file_name_start + "_MoS.csv", base_file=file_name_base,  m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=False)
-        MoS_Laplace_and_Gaussian(output_file_name = file_name_start + "_MoS_ChangeEpsDelta.csv", base_file=file_name_base, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=True)
-        M_Laplace_and_Gaussian(output_file_name = file_name_start + "_M.csv", df=df, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=False, numberofrepeat=numberofrepeat)
-        M_Laplace_and_Gaussian(output_file_name = file_name_start + "_M_ChangeEpsDelta.csv", df=df, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=True, numberofrepeat=numberofrepeat)
+        MoS_Laplace_and_Gaussian(output_file_name = file_name_start + "_MoS.csv", base_file=file_name_base,  m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=False, pbar=pbar)
+        MoS_Laplace_and_Gaussian(output_file_name = file_name_start + "_MoS_ChangeEpsDelta.csv", base_file=file_name_base, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=True, pbar=pbar)
+        M_Laplace_and_Gaussian(output_file_name = file_name_start + "_M.csv", df=df, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=False, pbar=pbar, repetitions=repetitions)
+        M_Laplace_and_Gaussian(output_file_name = file_name_start + "_M_ChangeEpsDelta.csv", df=df, m_and_M=m_and_M_combined, value_range=value_range, epsilon=eps, delta=delta, EpsDeltaChange=True, pbar=pbar, repetitions=repetitions)
 
         #Difference computation
         for statistic in ["Average", "Variance"]:
@@ -67,6 +72,7 @@ def generateFileandGraph(database_name, column_name, main_folder_name, value_ran
             for string in ["difference_laplace_M_minus_MoS", "difference_gaussian_M_minus_MoS", "difference_laplace_M_minus_MoSChangeEpsDelta", "difference_gaussian_M_minus_MoSChangeEpsDelta", "difference_laplace_MChangeEpsDelta_minus_MoS", "difference_gaussian_MChangeEpsDelta_minus_MoS"]:
                 for list_m_and_M, file_name_m_and_M, plots_limits in zip([m_and_M_large_scale,m_and_M_short_scale],["10--90","1--9"],[ [[0,1],[0,1]], [[0,0.1],[0,0.1]] ]):
                     generate_plot_suppression(plot_path_start=plot_name_start, csv_path=file_name_combined, plot_values=string, statistic=statistic, error_type=error_type, epsilon=eps, list_m_and_M=list_m_and_M, file_name_m_and_M=file_name_m_and_M, plots_limits=plots_limits)
+    pbar.close()
 
     ##Plots for the uniform Poisson sampling case
     for plot_type in ["Average", "Average+SD", "Variance"]:  
@@ -85,7 +91,7 @@ def generateFileandGraph(database_name, column_name, main_folder_name, value_ran
             generate_plot_uniform_Poisson_sampling(plot_path_start=plot_name_start, 
                             csv_path_list_M_Average=csv_path_list_M_Average, csv_path_list_M_Variance=csv_path_list_M_Variance, 
                             csv_path_list_MoSChange_Average=csv_path_list_MoSChange_Average, csv_path_list_MoSChange_Variance=csv_path_list_MoSChange_Variance, 
-                            epsilon_list=list_epsilons, plot_type=plot_type, error_type=error_type, mechanism_name=mechanism_name, numberofrepeat=numberofrepeat)
+                            epsilon_list=list_epsilons, plot_type=plot_type, error_type=error_type, mechanism_name=mechanism_name, repetitions=repetitions)
 
     ## Generates a separate folder with only the plots used in the paper
-    paper_plots(database_name=database_name, column_name=column_name, main_folder_name=main_folder_name, list_epsilons=list_epsilons, delta=delta, numberofrepeat=numberofrepeat)
+    paper_plots(database_name=database_name, column_name=column_name, main_folder_name=main_folder_name, list_epsilons=list_epsilons, delta=delta, repetitions=repetitions)

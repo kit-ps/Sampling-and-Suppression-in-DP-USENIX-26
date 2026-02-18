@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import tqdm
 from scipy.stats import norm
 from multiprocessing import Pool
 from suppression_privacy_parameters import *
@@ -155,7 +156,7 @@ def iteration_suppression(arg):
     return [m, M, epsilon, delta] + indices_check
 
 """Compute MoS for RNM"""
-def MoS_RNM(output_file_name, df, path_average_distances, m_and_M, value_range, epsilon, delta, EpsDeltaChange, numberofrepeat):
+def MoS_RNM(output_file_name, df, path_average_distances, m_and_M, value_range, epsilon, delta, EpsDeltaChange, pbar, repetitions):
     counts=df.value_counts()
     real_maximum_index = counts.index[0] ##Maximum will be the first item of counts
 
@@ -177,11 +178,13 @@ def MoS_RNM(output_file_name, df, path_average_distances, m_and_M, value_range, 
             epsilon_of_M = epsilon
             delta_of_M = delta
 
-        for k in range(numberofrepeat):
+        for k in range(repetitions):
             jobs.append((m, M, epsilon_of_M, delta_of_M, probability_of_being_sampled_list, df, value_range, real_maximum_index))
     
     with Pool(64) as pool:
-        element.extend(pool.map(iteration_suppression, jobs))
+        for result in pool.imap(iteration_suppression, jobs):
+            element.append(result)
+            pbar.update(1)
 
     suppressed_df=pd.DataFrame(element, columns=header)
     suppressed_df.to_csv(output_file_name, index=False)
@@ -199,7 +202,7 @@ def iteration_without_suppression(arg):
     return [m, M, epsilon, delta] + indices_check
 
 """Compute M for Clustering"""
-def M_RNM(output_file_name, df, m_and_M, value_range, epsilon, delta, EpsDeltaChange, numberofrepeat):
+def M_RNM(output_file_name, df, m_and_M, value_range, epsilon, delta, EpsDeltaChange, pbar, repetitions):
     counts=df.value_counts()
     real_maximum_index = counts.index[0] ##Maximum will be the first item of counts
 
@@ -216,11 +219,13 @@ def M_RNM(output_file_name, df, m_and_M, value_range, epsilon, delta, EpsDeltaCh
             epsilon_of_M = epsilon
             delta_of_M = delta
 
-        for k in range(numberofrepeat):
+        for k in range(repetitions):
             jobs.append((m, M, epsilon_of_M, delta_of_M, counts, value_range, real_maximum_index))
     
     with Pool(64) as pool:
-        element.extend(pool.map(iteration_without_suppression, jobs))
+        for result in pool.imap(iteration_without_suppression, jobs):
+            element.append(result)
+            pbar.update(1)
     new_df=pd.DataFrame(element, columns=header)
     new_df.to_csv(output_file_name, index=False)
 
