@@ -35,7 +35,7 @@ The result is obtained by running `main.py`, which runs the following two Python
 
 ## Time to Run
 
-Due to the amount of computations, the time to run for all algorithms is around 21&#8201;h: `FinalMaximumFunction.py` took around 20&#8201;h&#8201;30&#8201;min and `FinalMaximumInverse.py` took around 20&#8201;min. The file `FinalMaximumFunction.py` contains parallelizations with 64 cores. 
+Due to the amount of computations, the time to run for all algorithms is around 17&#8201;h: `FinalMaximumFunction.py` took around 16&#8201;h&#8201;30&#8201;min and `FinalMaximumInverse.py` took around 20&#8201;min. The file `FinalMaximumFunction.py` contains parallelizations with 64 cores. 
 
 ## <a name="output">Output</a>
 

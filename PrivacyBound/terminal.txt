@@ -1,0 +1,10 @@
+Checking function:
+FinalMaximumFunction.py:
+Minimum difference (computational - theoretical):  -0.00173013342674722
+Maximum difference (computational - theoretical):  1.65864230895069e-7 
+
+Checking inverse function:
+FinalMaximumInverse.py:
+Minimum difference (computational - theoretical):  -6.41123387712383e-9
+Maximum difference (computational - theoretical):  1.63040350054100e-7 
+
