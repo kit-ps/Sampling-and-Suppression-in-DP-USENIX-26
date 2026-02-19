@@ -4,11 +4,11 @@ import tqdm
 
 def generate_average_distance_list(file_name_output, df):
     print("Generate average distance list (1/2):")
+    length_Element=len(df)
     pbar = tqdm.tqdm(total=length_Element)
     counts=df.value_counts()
     
     outlier_score_list=[]
-    length_Element=len(df)
     #For every element in the database, compute its outlier score and add it to the list
     for i in df: 
         pbar.update(1)
