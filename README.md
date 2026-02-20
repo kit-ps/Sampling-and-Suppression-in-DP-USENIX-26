@@ -17,18 +17,20 @@ Each folder contains an independent experiment. These are:
 * `ReportNoisyMax` contains our experiment on the mode computation with report noisy max and the exponential mechanism. 
 * `Clustering-DPLloyd` contains our experiment on the DPLloyd clustering algorithm.
 * `Clustering-kmedian` contains our experiment on the $k$-median clustering algorithm.
-* `PrivacyBound` contains the code that checks whether the empirical result we obtain match our theorized values for Theorem 5.4.
+* `PrivacyBound` contains the code that checks whether the empirical results we obtain match our theorized values for Theorem 5.4.
 * `PrivacyBoundPlots` contains the code that generates Figures 2 and 4 of our paper (Figures 2 and 75 of the long version). 
 
 Each folder has a respective README file that explains the details of each experiment.  
 
-Note that the experiments are randomized. Included in each folder, we provide all statistical values in CSV files and plots that used in the paper.
+Note that the experiments are randomized. Included in each folder, we provide all statistical values in CSV files and plots that were used in the paper.
+
+In addition, we provide the `ViewPaperPlots.html` file in the main folder, which allows the reader to easily find and open all the figures shown in the paper and its long version.
 
 ## Technical Description and Setup Instructions
 
 For running the experiment, we used a server with an AMD EPYC 7702P 64-Core Processor running in Ubuntu 24.04. We note that approximately 1.7&#8201;GB of RAM is sufficient to run our code. All our code is written in Python 3.8.20. Some files contain parallelizations with 64 cores. 
 
-The experiments in each folder are independent from each other but share a common setup. For our experiments, we work with Conda and its environments. We recommend following their user guide to install Conda: https://docs.conda.io/projects/conda/en/stable/user-guide/index.html. We used the version `conda 24.7.1`. After installing Conda, the necessary requirements can be set up by creating and activating the environment `SamplingAndSuppression` contained in the `environment.yml` file: 
+The experiments in each folder are independent of each other but share a common setup. For our experiments, we work with Conda and its environments. We recommend following their user guide to install Conda: https://docs.conda.io/projects/conda/en/stable/user-guide/index.html. We used the version `conda 24.7.1`. After installing Conda, the necessary requirements can be set up by creating and activating the environment `SamplingAndSuppression` contained in the `environment.yml` file: 
 
 ```bash
 conda env create -f environment.yml
@@ -45,7 +47,7 @@ Running every `main.py` one after the other takes a bit more than 5&nbsp;days.
 
 ## Sources of the Used Databases
 
-The databases used for each experiment are included in their respective folder. A total of three different public databases are used and we explain here their sources.
+The databases used for each experiment are included in their respective folder. A total of three different public databases are used, and we explain here their sources.
 
 ### "Adult" database
 
@@ -55,7 +57,7 @@ The Adult database was derived from the US Census Bureau’s 1994–1995 Current
 
 ### "Census" database
 
-The Census database was obtained on July 27, 2000 using the Data Extraction System of the US Bureau of the Census (http://www.census.gov/DES/www/welcome.html) for the Computational Aspects of Statistical Confidentiality (CASC) project, as explained in 
+The Census database was obtained on July 27, 2000, using the Data Extraction System of the US Bureau of the Census (http://www.census.gov/DES/www/welcome.html) for the Computational Aspects of Statistical Confidentiality (CASC) project, as explained in 
 
 [2] R. Brand, J. Domingo-Ferrer, and J. M. Mateo-Sanz, 
 “Reference data sets to test and compare SDC methods for protection of numerical microdata”, 
@@ -66,7 +68,7 @@ The database can also be downloaded from https://sdctools.github.io/sdcMicro/ref
 
 ### "Irish" database
 
-The Irish database is a synthetic database generated from the data from the 2011 Irish Census as explained in
+The Irish database is a synthetic database generated from data of the 2011 Irish Census used and described in
 
 [3] V. Ayala-Rivera, A. O. Portillo-Dominguez, L. Murphy, and C. Thorpe, 
 “COCOA: a synthetic data generator for testing anonymization techniques”, 
@@ -74,7 +76,7 @@ in Privacy in Statistical Databases, J. Domingo-Ferrer and M. Pejić-Bach, Eds.,
 in Lecture Notes in Computer Science. Cham: Springer International Publishing, 2016, pp. 163–177. 
 doi: 10.1007/978-3-319-45381-1_13.
 
-We use directly postprocessing into numerical variables used in Rodríguez-Hoyos et al. [4] consisting of the last two thirds of `irishcensus100m.csv` in the repository of Ayala-Rivera et al. [3] (https://github.com/ucd-pel/COCOA/). 
+We directly work with the postprocessing into numerical variables used in Rodríguez-Hoyos et al. [4], consisting of the last two-thirds of `irishcensus100m.csv` in the repository of Ayala-Rivera et al. [3] (https://github.com/ucd-pel/COCOA/). 
 
 [4] A. Rodríguez-Hoyos, J. Estrada-Jiménez, D. Rebollo-Monedero, J. Parra-Arnau, and J. Forné, 
 “Does $k$-Anonymous Microaggregation Affect Machine-Learned Macrotrends?”, 

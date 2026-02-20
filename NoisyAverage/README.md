@@ -21,7 +21,7 @@ The code is written in Python 3.8.20.
 
 ## Setup
 
-The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured and activated by running
+The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured and activated by running:
 
 ```bash
 conda env create -f environment.yml
@@ -30,7 +30,7 @@ conda activate SamplingAndSuppression
 
 ## <a name="how-to-run"> How to run</a>
 
-Run the `main.py` file to obtain an instantation of the experiment with the parameters and databases used in the paper (recall that the experiment contains randomization). 
+Run the `main.py` file to obtain an instantiation of the experiment with the parameters and databases used in the paper (recall that the experiment contains randomization). 
 
 The code can be run for other parameters or databases with the following command:
 
@@ -43,9 +43,9 @@ The necessary and optional parameters are the following:
 * `database-name`: Path of the database to test (a CSV file with labeled rows and no indices).
 * `column-name`: Name of the column of the database to test.
 * `main-folder-name`: Name of the main folder where the CSV files and plots will be stored. 
-* `range-min` and `range-max`: Lower and upper boundaries of the range of values used to compute the sensitivity of the Laplace and Gaussian mechanism, i.e., the range is equivalent to `[range-min,range-max]`.
-* `list_epsilons`: List of epsilon values the experiment runs for. It must be introduced as a list of numerical values, all larger than 0 as seen in the command line. It is an optional parameter: The default is set to `0.25 0.5 1 2`. 
-* `delta`: Delta value for the experiment. A value between `0` and `1` (non-inclusive) or `None` must be introduced. The algorithm chooses `delta` as 1/(size_of_database)^2 if `None` is selected. It is an optional parameter: The default is set to is set to `None`.
+* `range-min` and `range-max`: Lower and upper boundaries of the range of values used to compute the sensitivity of the Laplace and Gaussian mechanisms, i.e., the range is equivalent to `[range-min,range-max]`.
+* `list_epsilons`: List of epsilon values the experiment runs for. It must be introduced as a list of numerical values, all larger than 0, as seen in the command line. It is an optional parameter: The default is set to `0.25 0.5 1 2`. 
+* `delta`: Delta value for the experiment. A value between `0` and `1` (non-inclusive) or `None` must be introduced. The algorithm chooses `delta` as 1/(size_of_database)^2 if `None` is selected. It is an optional parameter: The default is set to `None`.
 * `repetitions`: Number of repetitions to be computed for each value `(m,M)`. An integer must be introduced. It is an optional parameter: The default is set to `500`.
 
 Alternatively, the code can be run for other parameters or databases, by creating and running a `.py` file with the following command:
@@ -60,7 +60,7 @@ The `generateFileandGraph` function generates all the CSV files and plots for th
 
 ## Time to Run
 
-The time to run is dependent on the size of the database and number of iterations. Progress bars show the amount of computations left. Note that three progress bars generate per database execution: the first one covers the generation of average distances between the records, the second covers the pregeneration all suppressed databases, and the third covers the actual computation of the experiment. After the progress bars have been completed, the code takes a couple minutes to generate the plots. 
+The time to run is dependent on the size of the database and the number of iterations. Progress bars show the amount of computations left. Note that three progress bars appear per database execution: The first one covers the generation of average distances between the records, the second covers the pregeneration of all suppressed databases, and the third covers the actual computation of the experiment. After the progress bars have been completed, the code takes a couple of seconds to generate the plots. 
 
 In our case, each run on the `adult_train` database took around 45&#8201;min, each run on the `census` database took around 5 min, and each run on the `irishn_train` took around 1&#8201;h&#8201;30&#8201;min. Thus, running the main file takes around 4&#8201;h&#8201;30&#8201;min. The code contains a parallelization into 64 pools.
 
@@ -72,23 +72,23 @@ The output CSV files and plots are all included in the directory: `[main_folder_
 
 Inside the `CSVfiles` and `Plots` folders, a subfolder with the name `column_name` is created. The CSV files in `CSVfiles`/ `[column_name]` are:
 
-* `[column_name]_base.csv`: A base file used to reduce time complexity. It contains `repetitions` iterations of suppressed database for every `(m,M)` and some of its statistics (counts, sum of all values, and average).
-* Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_[mechanism].csv` containing the means and absolute errors (AE) of the DP mechanisms (both Laplace and Gaussian) for every of the `repetitions` iterations. A missing number appearing in the CSV file means that the mechanism could not be run for the given epsilon and delta parameters (see Section 6.1). One file is generated for every `epsilon` in `list_epsilons`, and there are four `mechanism` variants:
+* `[column_name]_base.csv`: A base file used to reduce time complexity. It contains the statistics (counts, sum of all values, and average) of multiple suppressed databases for every `(m,M)`. The number of suppressed databases per `(m,M)` value is given by `repetitions`.  
+* Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_[mechanism].csv` containing the means and absolute errors (AE) of the DP mechanisms (both Laplace and Gaussian) run multiple times (total number given by `repetitions`). A missing number appearing in the CSV file means that the mechanism could not be run for the given epsilon and delta parameters (see Section 6.1). One file is generated for every `epsilon` in `list_epsilons`, and there are four `mechanism` variants:
 	* `M`: mechanism NoisyAverage (M) without suppression run for the given epsilon and delta.
 	* `MoS`: mechanism NoisyAverage (M) with suppression (S) run for the given epsilon and delta.
 	* `M_ChangeEpsDelta`: mechanism NoisyAverage (M) without suppression run for the epsilon and delta that ensures that M and MoS have the same privacy parameters.  
 	* `MoS_ChangeEpsDelta`: mechanism NoisyAverage (M) with suppression (S) run for the epsilon and delta that ensures that M and MoS have the same privacy parameters.
-* Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_[mechanism]_Average.csv`, where the empirical mean over the numerical values of `repetitions` iterations is computed for every `(m,M)`.
-* Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_[mechanism]_Variance.csv`, where the empirical variance over the numerical values of `repetitions` iterations is computed for every `(m,M)`.
+* Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_[mechanism]_Average.csv`, where the empirical mean over the numerical values of all iterations is computed for every `(m,M)`.
+* Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_[mechanism]_Variance.csv`, where the empirical variance over the numerical values of all iterations is computed for every `(m,M)`.
 * Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_combined_[Average/Variance].csv` containing the absolute error differences of the mean/variance of M minus those of MoS, of M minus those of MoSChangeEpsDelta, and of MChangeEpsDelta minus those of MoS for every `(m,M)`. These are used in the plot generation. 
 
-Each CSV files contains the statistic relevant for both the sampling and outlier-score suppression evaluations, and for both the Laplace and Gaussian mechanisms. 
+Each CSV file contains the statistics relevant for both the sampling and outlier-score suppression evaluations, and for both the Laplace and Gaussian mechanisms. 
 
 The Plots in `Plots`/`[column_name]` are:
 
 * Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_difference_[noise]_[mechanism_difference]_[statistic]_[range].pdf`: The plots cover the outlier-score suppression evaluation. For each `epsilon` and the `delta` value, a plot with the utility difference is given over the different values of `(m,M)`. The variations are:
 	* `noise` is either `laplace` or `gaussian`, depending on the noise added. 
-	* `mechanism_difference` is either `M_minus_MoS`, `M_minus_MoSChangeEpsDelta` or `MChangeEpsDelta_minus_MoS`, depending on which of the three differences is plotted.
+	* `mechanism_difference` is either `M_minus_MoS`, `M_minus_MoSChangeEpsDelta`, or `MChangeEpsDelta_minus_MoS`, depending on which of the three differences is plotted.
 	* `statistic` is either `MPE`, the mean percent error, or `VarRE`, the variance of the relative error. 
 	* `range` is either `10--90`, plotting the values of `(m,M)` between `0.1` and `0.9` (showing suppression between 10 and 90 percent of the database), or `1--9`, plotting the values of `(m,M)` between `0.01` and `0.09` (showing suppression between 1 and 9 percent of the database).
 * `[column_name]_uniform_Poisson_sampling_[noise]_[statistic].pdf`: The plots showing the effect of uniform Poisson sampling. The condition `noise` is as before. The condition `statistic` is also as before, or can be `MPE+SD`, which adds to the MPE its 95% confidence interval (generated from the standard deviation).
@@ -144,7 +144,7 @@ They comprise the whole `PaperPlots` folder:
 		* `HighestEducationCompleted_eps=[epsilon]_delta=[delta]_difference_laplace_M_minus_MoSChangeEpsDelta_MPE_10--90.pdf`: Figure 25 in long version. 
 		* `HighestEducationCompleted_eps=[epsilon]_delta=[delta]_difference_gaussian_M_minus_MoSChangeEpsDelta_MPE_10--90.pdf`: Figure 26 in long version.
 
-* The plots covering an additional case that compares the effect of the mechanisms with and without suppression but without the privacy amplification. Values for `[epsilon]` and `[delta]` are as before. These plots comprise Appendix A.7 (long version):
+* The plots covering an additional case that compares the effect of the mechanisms with and without outlier-score suppression, but without the privacy amplification. Values for `[epsilon]` and `[delta]` are as before. These plots comprise Appendix A.7 (long version):
 	* Adult database
 		* `age_eps=[epsilon]_delta=[delta]_difference_laplace_M_minus_MoS_MPE_10--90.pdf`: Figure 45 in long version. 
 		* `age_eps=[epsilon]_delta=[delta]_difference_gaussian_M_minus_MoS_MPE_10--90.pdf`: Figure 46 in long version.
@@ -171,10 +171,10 @@ We briefly describe the `.py` files in this experiment folder:
 * `suppression_algorithm.py` contains the functions that run the mechanisms with and without sampling/outlier-score suppression. 
 * `suppression_privacy_parameters.py` contains the auxiliary functions that compute the privacy parameters of suppression and their inverses. This file is equal for all the main experiments.
 * `graphic_generator.py` contains the functions that generate the plots for sampling and outlier-score suppression.
-* `paperplots.py` contains the function that generates the copies of the plots used in the paper in an separate folder (`PaperPlots`) for convenience. 
+* `paperplots.py` contains the function that generates the copies of the plots used in the paper in a separate folder (`PaperPlots`) for convenience. 
 
 
-The databases used in this experiment are the Adult (`adult_train.csv`), Census (`census.csv`), and Irish (`irishn_train.csv`) databases. In addition, in the experiment folder we find these subfolders: 
+The databases used in this experiment are the Adult (`adult_train.csv`), Census (`census.csv`), and Irish (`irishn_train.csv`) databases. In addition, in the experiment folder, we find these subfolders: 
 
 * The `Adult`, `Census`, and `Irishn` folders, which contain the output of the individual experiment (see [Output](#output)). 
 * The `PaperPlots` folder, which contains only the plots of the previous folders that are used in the paper or its long version.  

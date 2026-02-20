@@ -21,7 +21,7 @@ The code is written in Python 3.8.20.
 
 ## Setup
 
-The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured and activated by running
+The requirements for all folders are the same, meaning that no further setup is necessary if it has already been set up once. For commodity and in case the environment has yet to be set up, the `environment.yml` file is also included in this folder and can be configured and activated by running:
 
 ```bash
 conda env create -f environment.yml
@@ -30,7 +30,7 @@ conda activate SamplingAndSuppression
 
 ## <a name="how-to-run">How to Run</a>
 
-Run the `main.py` file to obtain an instantation of the experiment with the parameters and databases used in the paper (recall that the experiment contains randomization). 
+Run the `main.py` file to obtain an instantiation of the experiment with the parameters and databases used in the paper (recall that the experiment contains randomization). 
 
 The code can be run for other parameters or databases with the following command:
 
@@ -45,7 +45,7 @@ The necessary and optional parameters are the following:
 * `columns`: List of the columns name of the database to test (must be congruent with the data domain).
 * `main-folder-name`: Name of the main folder where the CSV files and plots will be stored (in `str` format). 
 * `number-clusters`: Number of clusters for the clustering algorithm.
-* `list-epsilons`: List of epsilon values the experiment runs for. It must be introduced as a list of numerical values, all larger than 0 as seen in the command line. It is an optional parameter: The default is set to `0.25 0.5 1 2`. 
+* `list-epsilons`: List of epsilon values the experiment runs for. It must be introduced as a list of numerical values, all larger than 0, as seen in the command line. It is an optional parameter: The default is set to `0.25 0.5 1 2`. 
 * `repetitions`: Number of repetitions to be computed for each value `(m,M)`. An integer must be introduced. It is an optional parameter: The default is set to `20`.
 
 We generated a simple synthetic database `database1.csv` (and its domain file `database1_domain.csv`) by running the `generate_database.py` file. We used this database in our experiment.
@@ -62,7 +62,7 @@ The `generateFileandGraph` function generates all the CSV files and plots for th
 
 ## Time to Run
 
-The time to run is dependent on the size of the database and number of iterations. Progress bars show the amount of computations left. Note that two progress bars generate per database execution: The first one covers the generation of average distances between the records, and the second the actual computation of the experiment. After the progress bars have been completed, the code takes a couple minutes to generate the plots. 
+The time to run is dependent on the size of the database and the number of iterations. Progress bars show the amount of computations left. Note that two progress bars appear per database execution: The first one covers the generation of average distances between the records, and the second the actual computation of the experiment. After the progress bars have been completed, the code takes a couple of seconds to generate the plots. 
 
 In our case, the run on the `database1` database took slightly more than a day (26&#8201;h). The code contains a parallelization into 64 pools.
 
@@ -74,21 +74,21 @@ The output CSV files and plots are all included in the directory: `[main_folder_
 
 Inside the `CSVfiles` and `Plots` folders, a subfolder with the name created from concatenating the strings in `columns` is created. The CSV files in `CSVfiles`/ `[all names in the [columns] list]` are:
 
-* Files of the type `eps=[epsilon]_[mechanism].csv` containing the average cost of the $k$-median algorithm for every of the `repetitions` iterations. A missing number appearing in the CSV file means that the mechanism could not be run for the given epsilon parameter. One file is generated for every `epsilon` in `list_epsilons`, and there are four `mechanism` variants:
+* Files of the type `eps=[epsilon]_[mechanism].csv` containing the average cost of the $k$-median algorithm run multiple times (total number given by `repetitions`). A missing number appearing in the CSV file means that the mechanism could not be run for the given epsilon parameter. One file is generated for every `epsilon` in `list_epsilons`, and there are four `mechanism` variants:
 	* `M`: mechanism NoisyAverage (M) without suppression run for the given epsilon.
 	* `MoS`: mechanism NoisyAverage (M) with suppression (S) run for the given epsilon.
 	* `M_ChangeEpsDelta`: mechanism NoisyAverage (M) without suppression run for the epsilon that ensures that M and MoS have the same privacy parameters.  
 	* `MoS_ChangeEpsDelta`: mechanism NoisyAverage (M) with suppression (S) run for the epsilon that ensures that M and MoS have the same privacy parameters.
-* Files of the type `eps=[epsilon]_[mechanism]_[mechanism]_Average.csv`, where the empirical mean over the numerical values of `repetitions` iterations is computed for every `(m,M)`.
-* Files of the type `eps=[epsilon]_[mechanism]_[mechanism]_Variance.csv`, where the empirical variance over the numerical values of `repetitions` iterations is computed for every `(m,M)`.
+* Files of the type `eps=[epsilon]_[mechanism]_[mechanism]_Average.csv`, where the empirical mean over the numerical values of all iterations is computed for every `(m,M)`.
+* Files of the type `eps=[epsilon]_[mechanism]_[mechanism]_Variance.csv`, where the empirical variance over the numerical values of all iterations is computed for every `(m,M)`.
 * Files of the type `eps=[epsilon]_[mechanism]_combined_[Average/Variance].csv` containing the absolute error differences of the mean/variance of M minus those of MoS, of M minus those of MoSChangeEpsDelta, and of MChangeEpsDelta minus those of MoS for every `(m,M)`. These are used in the plot generation.
 
-Each CSV files contains the statistic relevant for both the sampling and outlier-score suppression evaluations. 
+Each CSV file contains the statistics relevant for both the sampling and outlier-score suppression evaluations. 
 
 The Plots in `Plots`/`[column_name]` are:
 
 * Files of the type `eps=[epsilon]_difference_error_[mechanism_difference]_[statistic]_10--90.pdf`: The plots cover the outlier-score suppression evaluation. For each `epsilon` value, a plot with the utility difference is given over the different values of `(m,M)`. The variations are:
-	* `mechanism_difference` is either `M_minus_MoS`, `M_minus_MoSChangeEpsDelta` or `MChangeEpsDelta_minus_MoS`, depending on which of the three differences is plotted.
+	* `mechanism_difference` is either `M_minus_MoS`, `M_minus_MoSChangeEpsDelta`, or `MChangeEpsDelta_minus_MoS`, depending on which of the three differences is plotted.
 	* `statistic` is either `Average`, the average of the average costs, or `Variance`, the variance of the average cost. 
 * `[all names in the [columns] list]_uniform_Poisson_sampling_[statistic].pdf`: The plots showing the effect of uniform Poisson sampling. The condition `statistic` is as before, or is the variant `Average+SD`, which adds to the average its 95% confidence interval (generated from the standard deviation).  
 
@@ -106,7 +106,7 @@ The file `main.py` contains the experiment we ran for the $k$-median clustering,
 * The plots covering the evaluation for outlier-score suppression (Section 6). Each figure in the paper contains four variants changing the `[epsilon]` value to  `0.25`, `0.5`, `1`, or `2`. Forms part of Appendix A.6 (long version):
 	* `eps=[epsilon]_difference_error_M_minus_MoSChangeEpsDelta_Average_10--90.pdf`: Figure 43 in long version.
 
-* The plots covering an additional case that compares the effect of the mechanism with and without suppression but without the privacy amplification. Values for `[epsilon]` are as before. Forms part of Appendix A.9 (long version):
+* The plots covering an additional case that compares the effect of the mechanism with and without outlier-score suppression, but without the privacy amplification. Values for `[epsilon]` are as before. Forms part of Appendix A.9 (long version):
 	* `eps=[epsilon]_difference_error_M_minus_MoS_Average_10--90.pdf`: Figure 73 in long version.
 
 ## Overview of the Files in the Folder
@@ -121,10 +121,10 @@ We briefly describe the `.py` files in this experiment folder:
 * `suppression_privacy_parameters.py` contains the auxiliary functions that compute the privacy parameters of suppression and their inverses. This file is equal for all the main experiments.
 * `graphic_generator.py` contains the functions that generate the plots for sampling and outlier-score suppression.
 * `generate_database.py` creates a simple numerical database and its domain file.
-* `paperplots.py` contains the function that generates the copies of the plots used in the paper in an separate folder (`PaperPlots`) for convenience. 
+* `paperplots.py` contains the function that generates the copies of the plots used in the paper in a separate folder (`PaperPlots`) for convenience. 
 
 
-The database used in this experiment is `database1.csv` (and its domain file `database1_domain.csv`). In addition, in the experiment folder we find these subfolders: 
+The database used in this experiment is `database1.csv` (and its domain file `database1_domain.csv`). In addition, in the experiment folder, we find these subfolders: 
 
 * The `Database1` folder, which contains the output of the individual experiment (see [Output](#output)). 
 * The `PaperPlots` folder, which contains only the plots of the previous folders that are used in the paper or its long version.
