@@ -62,7 +62,7 @@ The `generateFileandGraph` function generates all the CSV files and plots for th
 
 The time to run is dependent on the size of the database and the number of iterations. Progress bars show the amount of computations left. Note that three progress bars appear per database execution: The first one covers the generation of average distances between the records, the second covers the pregeneration of all suppressed databases, and the third covers the actual computation of the experiment. After the progress bars have been completed, the code takes a couple of seconds to generate the plots. 
 
-In our case, each run on the `adult_train` database took around 45&#8201;min, each run on the `census` database took around 5 min, and each run on the `irishn_train` took around 1&#8201;h&#8201;30&#8201;min. Thus, running the main file takes around 4&#8201;h&#8201;30&#8201;min. The code contains a parallelization into 64 pools.
+In our case, each run on the `adult_train` database took around 30&#8201;min, each run on the `census` database took around 5 min, and each run on the `irishn_train` took around 1&#8201;h&#8201;30&#8201;min. Thus, running the main file takes around 4&#8201;h&#8201;15&#8201;min. The code contains a parallelization into 64 pools.
 
 ## <a name="output">Output</a>
 

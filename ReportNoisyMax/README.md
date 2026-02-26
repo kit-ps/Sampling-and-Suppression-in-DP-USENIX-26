@@ -62,7 +62,7 @@ The `generateFileandGraph` function generates all the CSV files and plots for th
 
 The time to run is dependent on the size of the database and the number of iterations. Progress bars show the amount of computations left. Note that two progress bars appear per database execution: The first one covers the generation of average distances between the records, and the second the actual computation of the experiment. After the progress bars have been completed, the code takes a couple of seconds to generate the plots.
 
- In our case, each run on the `adult_train` database took around 1&#8201;h&#8201;45&#8201;min, and each run on the `irishn_train` took around 3&#8201;h&#8201;15 min. Thus, running the `main.py` files took around 9&#8201;h&#8201;45&#8201;min. The code contains a parallelization into 64 pools.
+ In our case, each run on the `adult_train` database took around 1&#8201;h&#8201;45&#8201;min, and each run on the `irishn_train` took around 3&#8201;h&#8201;30 min. Thus, running the `main.py` files took around 10&#8201;h&#8201;30&#8201;min. The code contains a parallelization into 64 pools.
 
 ## <a name="output">Output</a>
 
@@ -163,6 +163,9 @@ The plots used in the main paper are the following:
 		* `HighestEducationCompleted_eps=[epsilon]_delta=[delta]_difference_gaussian_error_M_minus_MoS_MPE_10--90.pdf`: Figure 70 in long version.
 		* `HighestEducationCompleted_eps=[epsilon]_delta=[delta]_difference_exponential_error_M_minus_MoS_MPE_10--90.pdf`: Figure 71 in long version. 
 		* `HighestEducationCompleted_eps=[epsilon]_delta=[delta]_difference_exponential_mechanism_error_M_minus_MoS_MPE_10--90.pdf`: Figure 72 in long version.
+
+> [!NOTE]
+> The plots of the `hours-per-week` in the Adult database and `HighestEducationCompleted` in the Irish database are not incorrect. Since the mode of each column represents approximately half of the records, both M and MoS exhibit a perfect empirical probability of success. Thus, the plots show an error of 0. For completeness, we kept these plots. 
 
 ## Overview of the Files in the Folder
 

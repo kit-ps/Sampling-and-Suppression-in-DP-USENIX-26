@@ -3,9 +3,9 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - pip=24.2=py38h06a4308_0
-  - python=3.8.20=he870216_0
-  - sage=10.1=hd8ed1ab_0
+  - pip=24.2
+  - python=3.8.20
+  - sage=10.1
   - pip:
     - matplotlib==3.7.3
     - numpy==1.24.3

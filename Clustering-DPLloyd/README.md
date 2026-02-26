@@ -56,14 +56,14 @@ from principal_function import *
 generateFileandGraph(database_name="adult_clustering.csv", columns=["age", "fnlwgt", "education-num", "capital-gain", "capital-loss", "hours-per-week"], main_folder_name="Adult_clustering", number_clusters=5, range_columns=[[0,125],[0,2227058],[1,16],[0,149999],[0,6534],[0,100]], normalized_range_value=1, list_epsilons=[0.25,0.5,1,2], repetitions=500)
 ```
 
-The `generateFileandGraph` function generates all the CSV files and plots for the specified database. The inputs are equivalent to the parameters above, where `columns-range` is now separated into two, the column name (`columns`) and its range (`range_columns`), as seen in the previous command.  
+The `generateFileandGraph` function generates all the CSV files and plots for the specified database. The inputs are equivalent to the parameters above, where `columns-range` is now separated into two, the column names (`columns`) and their ranges (`range_columns`), as seen in the previous command.  
 
 
 ## Time to Run
 
 The time to run is dependent on the size of the database and the number of iterations. Progress bars show the amount of computations left. Note that two progress bars appear per database execution: The first one covers the generation of average distances between the records, and the second the actual computation of the experiment. After the progress bars have been completed, the code takes a couple of seconds to generate the plots. 
 
-In our case, the run on the `adult_clustering` database took around 2.5&nbsp;days (60&#8201;h). The code contains a parallelization into 64 pools. 
+In our case, the run on the `adult_clustering` database took around 2&nbsp;days (48&#8201;h). The code contains a parallelization into 64 pools. 
 
 ## <a name="output">Output</a>
 
