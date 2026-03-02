@@ -43,7 +43,7 @@ Running `main.py` from each folder file covers the whole experiment (further det
 python main.py
 ```
 
-Running every `main.py` one after the other takes a bit more than 5&nbsp;days.  
+Running every `main.py` one after the other takes around 4&nbsp;days and a half.  
 
 ## Sources of the Used Databases
 

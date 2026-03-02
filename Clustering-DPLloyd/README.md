@@ -63,7 +63,7 @@ The `generateFileandGraph` function generates all the CSV files and plots for th
 
 The time to run is dependent on the size of the database and the number of iterations. Progress bars show the amount of computations left. Note that two progress bars appear per database execution: The first one covers the generation of average distances between the records, and the second the actual computation of the experiment. After the progress bars have been completed, the code takes a couple of seconds to generate the plots. 
 
-In our case, the run on the `adult_clustering` database took around 2&nbsp;days (48&#8201;h). The code contains a parallelization into 64 pools. 
+In our case, the run on the `adult_clustering` database took slightly less than 2&nbsp;days (46&#8201;h). The code contains a parallelization into 64 pools. 
 
 ## <a name="output">Output</a>
 

@@ -73,6 +73,6 @@ def generate_database(database_file_name, data_domain_file_name, size_database, 
 	data_domain = itertools.product(*column_domain)
 
 	df_domain = pd.DataFrame(data_domain,columns=col_names)
-	df_domain.to_csv(os.path.join(main_folder_name,data_domain_file_name), index=False)
+	df_domain.to_csv(data_domain_file_name, index=False)
 
 generate_database(database_file_name = "database1.csv", data_domain_file_name = "database1_domain.csv", size_database = 100, col_names = ["row1","row2"], col_dimension = [[0,100],[0,100]], number_clusters = 4, variance_normal = 10)
