@@ -7,7 +7,7 @@ How Sampling and Suppression Degrade the Privacy–Utility Tradeoff*
 
 by Àlex Miranda-Pascual, Javier Parra-Arnau, and Thorsten Strufe. 
 
-This artifact is permanently available at https://zenodo.org/records/17977528.
+This artifact is permanently available at https://zenodo.org/records/17977527.
 
 ## Overview 
 
