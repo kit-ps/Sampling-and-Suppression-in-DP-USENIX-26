@@ -3,6 +3,11 @@ import numpy as np
 from multiprocessing import Pool, Lock, Manager
 import tqdm
 
+#Open config file
+import sys
+sys.path.append("..")
+from config import *
+
 def norm_calculation(row1,row2):
     square_sum = 0 
     for i in range(len(row1)):
@@ -33,7 +38,7 @@ def generate_average_distance_list(file_name_output, df, columns, normalized_ran
     for _, row in df.iterrows():
         jobs.append((df,row,max_norm_value,length_Element)) 
 
-    with Pool(64) as pool:
+    with Pool(N_CORES) as pool:
         for result in pool.imap(iteration, jobs):
             outlier_score_list.append(result)
             pbar.update(1)

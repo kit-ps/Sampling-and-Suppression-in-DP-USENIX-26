@@ -2,6 +2,11 @@ from mainfunctions import *
 from multiprocessing import Pool, Lock, Manager
 import tqdm
 
+#Open config file
+import sys
+sys.path.append("..")
+from config import *
+
 gcoleps=[]
 gcolm=[]
 gcolM=[]
@@ -22,7 +27,7 @@ for m100 in [m for m in range(1,99)]: #m runs from 0.01 to 0.98 (0.99 is not nec
 
         jobs_eps0.append((m_it,M_it))
 
-with Pool(64) as pool:
+with Pool(N_CORES) as pool:
     for result in pool.imap(iteration_eps0, jobs_eps0):
         gcoleps.append(0)
         gcolm.append(result[1])
@@ -50,7 +55,7 @@ for ep in list_epsilons:
 
             jobs.append((ep,m_it,M_it))
 
-with Pool(64) as pool:
+with Pool(N_CORES) as pool:
     for result in pool.imap(iteration, jobs):
         gcoleps.append(result[0])
         gcolm.append(result[1])

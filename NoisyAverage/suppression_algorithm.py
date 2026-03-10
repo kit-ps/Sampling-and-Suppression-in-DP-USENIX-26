@@ -7,6 +7,11 @@ from suppression_privacy_parameters import *
 from generate_average_distance_list import *
 os.environ['TF_XLA_FLAGS']= '--tf_xla_enable_xla_devices'
 
+#Open config file
+import sys
+sys.path.append("..")
+from config import *
+
 """Noise to add in the Laplace mechanism"""
 def Laplace_noise(epsilon: float=1, sensitivity=1):
     if epsilon<=0:
@@ -111,7 +116,7 @@ def generate_iterations_suppressed_database(output_file_name, df, path_average_d
     
     print("Precompute all suppressed databases (2/3):")
     pbar = tqdm.tqdm(total=repetitions*len(m_and_M))
-    with Pool(64) as pool:
+    with Pool(N_CORES) as pool:
         for result in pool.imap(iteration_suppression, jobs):
             element.append(result)
             pbar.update(1)

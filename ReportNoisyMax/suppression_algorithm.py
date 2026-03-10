@@ -1,11 +1,17 @@
 import pandas as pd
 import numpy as np
 import tqdm
+import sys
 from scipy.stats import norm
 from multiprocessing import Pool
 from suppression_privacy_parameters import *
 from generate_average_distance_list import *
 os.environ['TF_XLA_FLAGS']= '--tf_xla_enable_xla_devices'
+
+#Open config file
+import sys
+sys.path.append("..")
+from config import *
 
 """Noise to add in the Laplace mechanism"""
 def Laplace_noise(epsilon: float=1, sensitivity=1):
@@ -181,7 +187,7 @@ def MoS_RNM(output_file_name, df, path_average_distances, m_and_M, value_range, 
         for k in range(repetitions):
             jobs.append((m, M, epsilon_of_M, delta_of_M, probability_of_being_sampled_list, df, value_range, real_maximum_index))
     
-    with Pool(64) as pool:
+    with Pool(N_CORES) as pool:
         for result in pool.imap(iteration_suppression, jobs):
             element.append(result)
             pbar.update(1)
@@ -222,7 +228,7 @@ def M_RNM(output_file_name, df, m_and_M, value_range, epsilon, delta, EpsDeltaCh
         for k in range(repetitions):
             jobs.append((m, M, epsilon_of_M, delta_of_M, counts, value_range, real_maximum_index))
     
-    with Pool(64) as pool:
+    with Pool(N_CORES) as pool:
         for result in pool.imap(iteration_without_suppression, jobs):
             element.append(result)
             pbar.update(1)

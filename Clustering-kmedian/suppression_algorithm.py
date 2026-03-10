@@ -7,6 +7,11 @@ from generate_average_distance_list import *
 from kmedian import *
 os.environ['TF_XLA_FLAGS']= '--tf_xla_enable_xla_devices'
 
+#Open config file
+import sys
+sys.path.append("..")
+from config import *
+
 """Given a dataset, it returns a suppressed dataset with the records suppressed 
 according to the outlier scores in the probabilities file"""
 def suppressed_dataset(probabilities, dataset):
@@ -61,7 +66,7 @@ def MoS_Clustering(output_file_name, df, columns, data_domain, path_average_dist
         for k in range(repetitions):
             jobs.append((m, M, epsilon_of_M, probability_of_being_sampled_list, df, data_domain, number_dimensions, number_clusters, value_n))
     
-    with Pool(64) as pool:
+    with Pool(N_CORES) as pool:
         for result in pool.imap(iteration_suppression, jobs):
             element.append(result)
             pbar.update(1)
@@ -103,7 +108,7 @@ def M_Clustering(output_file_name, df, columns, data_domain, m_and_M, epsilon, n
         for iteration in range(repetitions):
             jobs.append((m, M, epsilon_of_M, database_array, data_domain, number_dimensions, number_clusters, value_n))
     
-    with Pool(64) as pool:
+    with Pool(N_CORES) as pool:
         for result in pool.imap(iteration_without_suppression, jobs):
             element.append(result)
             pbar.update(1)

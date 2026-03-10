@@ -13,9 +13,7 @@ This experiment is part of the artifact available in full at https://zenodo.org/
 
 ## Overview 
 
-The code generates the CSV files and plots of the utility results used in the paper. The experiment in this folder covers our mode computation over numerical bases for the report noisy max algorithm with Laplace, exponential, and Gaussian noise, and the exponential mechanism. The same script covers both the sampling (Section 3) and outlier-score suppression (Section 6) evaluations.  
-
-For a given database and column, the code runs the NoisyAverage algorithm for the specified epsilons and delta. It generates all the CSV files and plots altogether. 
+The code generates the CSV files and plots of the utility results used in the paper. The experiment in this folder covers our mode computation over numerical bases for the report noisy max algorithm with Laplace, exponential, and Gaussian noise, and the exponential mechanism. The same script covers both the sampling (Section 3) and outlier-score suppression (Section 6) evaluations for the specified database, column, epsilons, and delta.
 
 The code is written in Python 3.8.20.
 
@@ -35,7 +33,7 @@ Run the `main.py` file to obtain an instantiation of the experiment with the par
 The code can be run for other parameters or databases with the following command:
 
 ```bash
-	python main.py --database-name adult_train.csv --column-name age --main-folder-name Adult --range-min 0 --range-max 125 --list-epsilons 0.25 0.5 1 2 --repetitions 2000
+python main.py --database-name adult_train.csv --column-name age --main-folder-name Adult --range-min 0 --range-max 125 --list-epsilons 0.25 0.5 1 2 --repetitions 2000
 ```
 
 The necessary and optional parameters are the following:
@@ -62,7 +60,7 @@ The `generateFileandGraph` function generates all the CSV files and plots for th
 
 The time to run is dependent on the size of the database and the number of iterations. Progress bars show the amount of computations left. Note that two progress bars appear per database execution: The first one covers the generation of average distances between the records, and the second the actual computation of the experiment. After the progress bars have been completed, the code takes a couple of seconds to generate the plots.
 
- In our case, each run on the `adult_train` database took around 1&#8201;h&#8201;45&#8201;min, and each run on the `irishn_train` took around 3&#8201;h&#8201;30 min. Thus, running the `main.py` files took around 10&#8201;h&#8201;30&#8201;min. The code contains a parallelization into 64 pools.
+The code is parallelized, and the number of processes corresponds to the number of CPU cores on the user's machine. This setting can be modified by changing the value of `N_CORES` in the `config.py` file in the main folder. In our case with 64 cores, each run on the `adult_train` database took around 1&#8201;h&#8201;45&#8201;min, and each run on the `irishn_train` took around 3&#8201;h&#8201;30 min. Thus, running the `main.py` files took around 10&#8201;h&#8201;30&#8201;min.
 
 ## <a name="output">Output</a>
 
@@ -72,11 +70,11 @@ The output CSV files and plots are all included in the directory: `[main_folder_
 
 Inside the `CSVfiles` and `Plots` folders, a subfolder with the name `column_name` is created. The CSV files in `CSVfiles`/ `[column_name]` are:
 
-* Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_[mechanism].csv` containing whether the mode was correctly outputted by the DP mechanisms (RNM with Laplace, Gaussian, and exponential noise, and exponential mechanism) run multiple times (total number given by `repetitions`).. A missing number appearing in the CSV file means that the mechanism could not be run for the given epsilon and delta parameters (see Section 6.1). One file is generated for every `epsilon` in `list_epsilons`, and there are four `mechanism` variants:
-	* `M`: mechanism NoisyAverage (M) without suppression run for the given epsilon and delta.
-	* `MoS`: mechanism NoisyAverage (M) with suppression (S) run for the given epsilon and delta.
-	* `M_ChangeEpsDelta`: mechanism NoisyAverage (M) without suppression run for the epsilon and delta that ensures that M and MoS have the same privacy parameters.  
-	* `MoS_ChangeEpsDelta`: mechanism NoisyAverage (M) with suppression (S) run for the epsilon and delta that ensures that M and MoS have the same privacy parameters.
+* Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_[mechanism].csv` containing whether the mode was correctly outputted by the DP mechanisms (RNM with Laplace, Gaussian, and exponential noise, and exponential mechanism) run multiple times (total number given by `repetitions`). A missing number appearing in the CSV file means that the mechanism could not be run for the given epsilon and delta parameters (see Section 6.1). One file is generated for every `epsilon` in `list_epsilons`, and there are four `mechanism` variants:
+	* `M`: The RNM/exponential mechanisms (M) without suppression run for the given epsilon and delta.
+	* `MoS`: The RNM/exponential mechanisms (M) with suppression (S) run for the given epsilon and delta.
+	* `M_ChangeEpsDelta`: The RNM/exponential mechanisms (M) without suppression run for the epsilon and delta that ensures that M and MoS have the same privacy parameters.  
+	* `MoS_ChangeEpsDelta`: The RNM/exponential mechanisms (M) with suppression (S) run for the epsilon and delta that ensures that M and MoS have the same privacy parameters.
 * Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_[mechanism]_Emp_Prob.csv`, where the empirical probability of correctly returning the mode over all iterations is computed for every `(m,M)`.
 * Files of the type `[column_name]_eps=[epsilon]_delta=[delta]_combined_Emp_Prob.csv` containing the differences in empirical probability of incorrectly returning the mode of M minus those of MoS, of M minus those of MoSChangeEpsDelta, and of MChangeEpsDelta minus those of MoS for every `(m,M)`. These are used in the plot generation.
 
@@ -177,7 +175,7 @@ We briefly describe the `.py` files in this experiment folder:
 * `suppression_algorithm.py` contains the functions that run the mechanisms with and without sampling/outlier-score suppression. 
 * `suppression_privacy_parameters.py` contains the auxiliary functions that compute the privacy parameters of suppression and their inverses. This file is equal for all the main experiments.
 * `graphic_generator.py` contains the functions that generate the plots for sampling and outlier-score suppression.
-* `paperplots.py` contains the function that generates the copies of the plots used in the paper in a separate folder (`PaperPlots`) for convenience. 
+* `paperplots.py` contains the function that generates from the CSV files the copies of the plots used in the paper in a separate folder (`PaperPlots`) for convenience.
 
 The databases used in this experiment are the Adult (`adult_train.csv`) and Irish (`irishn_train.csv`) databases. In addition, in the experiment folder, we find these subfolders: 
 

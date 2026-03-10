@@ -13,10 +13,10 @@ This artifact is permanently available at https://zenodo.org/records/17977527.
 
 Each folder contains an independent experiment. These are:
 
-* `NoisyAverage` contains our experiment on the mean computation with NoisyAverage.
-* `ReportNoisyMax` contains our experiment on the mode computation with report noisy max and the exponential mechanism. 
-* `Clustering-DPLloyd` contains our experiment on the DPLloyd clustering algorithm.
-* `Clustering-kmedian` contains our experiment on the $k$-median clustering algorithm.
+* `NoisyAverage` contains our experiment on the mean computation comparing the utility guarantees of NoisyAverage with and without sampling and outlier-score suppression.
+* `ReportNoisyMax` contains our experiment on the mode computation comparing the utility guarantees of report noisy max and the exponential mechanism with and without sampling and outlier-score suppression. 
+* `Clustering-DPLloyd` contains our experiment comparing the utility guarantees of the DPLloyd clustering algorithm with and without sampling and outlier-score suppression.
+* `Clustering-kmedian` contains our experiment comparing the utility guarantees of the $k$-median clustering algorithm with and without sampling and outlier-score suppression.
 * `PrivacyBound` contains the code that checks whether the empirical results we obtain match our theorized values for Theorem 5.4.
 * `PrivacyBoundPlots` contains the code that generates Figures 2 and 4 of our paper (Figures 2 and 75 of the long version). 
 
@@ -28,7 +28,7 @@ In addition, we provide the `ViewPaperPlots.html` file in the main folder, which
 
 ## Technical Description and Setup Instructions
 
-For running the experiment, we used a server with an AMD EPYC 7702P 64-Core Processor running in Ubuntu 24.04. We note that approximately 1.7&#8201;GB of RAM is sufficient to run our code. All our code is written in Python 3.8.20. Some files contain parallelizations with 64 cores. 
+For running the experiment, we used a server with an AMD EPYC 7702P 64-Core Processor running in Ubuntu 24.04. We note that approximately 1.7&#8201;GB of RAM is sufficient to run our code. All our code is written in Python 3.8.20. Some parts of the code use parallelization to speed up the computation. The code is parallelized, and the default number of processes corresponds to the number of CPU cores on the user's machine. This number can be modified by editing the `config.py` file. Our experiments are run with parallelizations with 64 cores.
 
 The experiments in each folder are independent of each other but share a common setup. For our experiments, we work with Conda and its environments. We recommend following their user guide to install Conda: https://docs.conda.io/projects/conda/en/stable/user-guide/index.html. We used the version `conda 24.7.1`. After installing Conda, the necessary requirements can be set up by creating and activating the environment `SamplingAndSuppression` contained in the `environment.yml` file: 
 
@@ -37,13 +37,15 @@ conda env create -f environment.yml
 conda activate SamplingAndSuppression
 ```
 
-Running `main.py` from each folder file covers the whole experiment (further details are given in each README file): 
+Redirect to the corresponding folder in order to run the experiment. Each experiment can be replicated under the same variables described in the paper by running the corresponding `main.py` file: 
 
 ```bash
 python main.py
 ```
 
-Running every `main.py` one after the other takes around 4.5&nbsp;days.  
+The README of each folder contains further instructions on running the experiment under different settings (e.g., different epsilons or databases), as these instructions vary by experiment. 
+
+Running every `main.py` one after the other takes around 4.5&nbsp;days with a 64-core parallelization.  
 
 ## Sources of the Used Databases
 
